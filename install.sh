@@ -223,6 +223,14 @@ function setup_zsh_theme() {
     echo 'done!'
 }
 
+function install_v2ray() {
+    echo "exec: install_v2ray"
+
+    bash <(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
+
+    echo 'done!'
+}
+
 
 function install_all() {
     ensure_rc
@@ -236,6 +244,7 @@ function install_all() {
     setup_utils
     setup_env
     setup_zsh_theme
+    install_v2ray
 }
 
 
@@ -252,6 +261,7 @@ select a function code:
 【 8 】 Setup utils
 【 9 】 Setup env
 【 0 】 Setup zsh theme
+【 v2 】 install_v2ray
 【 a 】 Install all
 【 x 】 Install softwares for macos
 【 * 】 Exit
@@ -277,6 +287,7 @@ case $choice in
     8) setup_utils;;
     9) setup_env;;
     0) setup_zsh_theme;;
+    v2) install_v2ray;;
     a) install_all;;
     x) install_softwares_for_macos;;
     *) echo 'Bye' && exit;;
