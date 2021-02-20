@@ -73,13 +73,16 @@ alias gco='git checkout'
 alias gmg='git merge --no-commit --squash' # merge不产生新commit,并且可以多个commit合并为一个
 
 # brew
-if which brew > /dev/null; then
-    # BREWHOME=`brew --prefix`
-    BREWHOME="/usr/local"
-    export LDFLAGS="-L$BREWHOME/lib"
-    export CPPFLAGS="-I$BREWHOME/include"
-    export PKG_CONFIG_PATH="$BREWHOME/lib/pkgconfig"
+if [[ `uname` = "Darwin" ]]; then
+    if which brew > /dev/null; then
+        # BREWHOME=`brew --prefix`
+        BREWHOME="/usr/local"
+        export LDFLAGS="-L$BREWHOME/lib"
+        export CPPFLAGS="-I$BREWHOME/include"
+        export PKG_CONFIG_PATH="$BREWHOME/lib/pkgconfig"
+    fi
 fi
+
 
 # Pyenv
 export PYENV_ROOT="$HOME/.pyenv"
@@ -96,3 +99,8 @@ fi
 
 # ssh proxifier
 alias ac160='ssh -ND 1081 biomind@192.168.2.160'
+
+# golang
+if [[ `uname` = "Linux" ]]; then
+    export PATH=$PATH:/usr/local/go/bin
+fi
