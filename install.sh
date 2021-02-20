@@ -115,7 +115,8 @@ function install_ohmyzsh() {
     else
         echo "oh-my-zsh is already installed"
     fi
-
+    git clone git://github.com/zsh-users/zsh-autosuggestions $ZSH_CUSTOM/plugins/zsh-autosuggestions
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
     echo 'done!'
 }
 
