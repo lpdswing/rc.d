@@ -46,3 +46,4 @@ fi
 if [ -f "$HOME/.rc.d/functions.sh" ]; then
     source $HOME/.rc.d/functions.sh
 fi
+. "$HOME/.cargo/env"

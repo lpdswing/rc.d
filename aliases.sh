@@ -6,7 +6,7 @@ export GREP_COLOR='1;31'
  # @LastEditors: Please set LastEditors
  # @Description: In User Settings Edit
  # @FilePath: /.rc.d/aliases.sh
-### 
+###
 export LC_ALL="zh_CN.UTF-8"
 
 if [ `uname` = "Darwin" ]; then
@@ -68,7 +68,7 @@ fi
 alias gst='git status -sb'
 alias gstt='git status'
 alias gdf='git difftool'
-alias glg='git log --stat --graph --max-count=10'
+alias glg="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
 alias gco='git checkout'
 alias gmg='git merge --no-commit --squash' # merge不产生新commit,并且可以多个commit合并为一个
 
@@ -99,6 +99,7 @@ fi
 
 # ssh proxifier
 alias ac160='ssh -ND 1081 biomind@192.168.2.160'
+alias ac59='ssh -ND 1082 biomind@192.168.10.59'
 
 # golang
 if [[ `uname` = "Linux" ]]; then

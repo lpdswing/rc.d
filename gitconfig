@@ -1,6 +1,6 @@
 [user]
-    name = lpdswing
-    email = lpdswing@qq.com
+	name = lpdswing
+	email = lpdswing@qq.com
 [alias]
     ci = commit
     co = checkout
@@ -22,3 +22,9 @@
 [core]
     editor = vim
 	quotepath = false
+	autocrlf = input
+[filter "lfs"]
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
