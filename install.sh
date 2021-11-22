@@ -5,7 +5,7 @@ CURRENT_DIR=$PWD
 RC_DIR="$HOME/.rc.d"
 LOCAL_BIN="$HOME/.local/bin"
 
-PYTHON_VERSION='3.9.5'
+PYTHON_VERSION='3.10.0'
 BREW_URL='https://raw.githubusercontent.com/Homebrew/install/master/install'
 OH_MY_ZSH_URL='https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh'
 PYENV_URL='https://raw.githubusercontent.com/pyenv/pyenv-installer/master/bin/pyenv-installer'
@@ -115,8 +115,6 @@ function install_ohmyzsh() {
     else
         echo "oh-my-zsh is already installed"
     fi
-    git clone git://github.com/zsh-users/zsh-autosuggestions $ZSH_CUSTOM/plugins/zsh-autosuggestions
-    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
     echo 'done!'
 }
 
@@ -165,19 +163,6 @@ function install_python_pkg() {
 }
 
 
-function setup_utils() {
-    echo "exec: setup_utils"
-
-    mkdir -p $LOCAL_BIN
-    cd $LOCAL_BIN
-    git clone $UTILS_URL utils
-
-    for u_path in `find utils -maxdepth 1 -perm 0755 -type f`
-    do
-        ln -sfv $u_path `basename $u_path`
-    done
-}
-
 
 function setup_env() {
     echo "exec: setup_env"
@@ -204,18 +189,15 @@ function setup_env() {
 }
 
 
-function setup_zsh_theme() {
-    echo "exec: setup_zsh_theme"
+function setup_zsh_plugin() {
+    echo "exec: setup_zsh_plugin"
 
     ensure_rc
 
-    if [ -d "$HOME/.oh-my-zsh/custom/themes" ]; then
-        cd $HOME/.oh-my-zsh/custom/themes
-        for name in `ls $RC_DIR/omz-theme`
-        do
-            # link zsh themes
-            ln -sfv $RC_DIR/omz-theme/$name $name
-        done
+    if [ -d "$HOME/.oh-my-zsh/custom/" ]; then
+        git clone --depth=1 https://gitee.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+        git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+        git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
     else
         echo "Please install ohmyzsh first."
         exit 1
@@ -242,7 +224,6 @@ function install_all() {
     install_pyenv
     install_python
     install_python_pkg
-    setup_utils
     setup_env
     setup_zsh_theme
     install_v2ray
@@ -259,7 +240,6 @@ select a function code:
 【 5 】 Install pyenv
 【 6 】 Install python
 【 7 】 Install python pkg
-【 8 】 Setup utils
 【 9 】 Setup env
 【 0 】 Setup zsh theme
 【 v2 】 install_v2ray
@@ -285,7 +265,6 @@ case $choice in
     5) install_pyenv;;
     6) install_python;;
     7) install_python_pkg;;
-    8) setup_utils;;
     9) setup_env;;
     0) setup_zsh_theme;;
     v2) install_v2ray;;
