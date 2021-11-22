@@ -238,7 +238,7 @@ function install_all() {
     install_python
     install_python_pkg
     setup_env
-    setup_zsh_theme
+    setup_zsh_plugin
     install_v2ray
 }
 
@@ -281,7 +281,7 @@ case $choice in
     7) install_python_pkg;;
     8) install_nvm;;
     9) setup_env;;
-    0) setup_zsh_theme;;
+    0) setup_zsh_plugin;;
     v2) install_v2ray;;
     a) install_all;;
     x) install_softwares_for_macos;;
