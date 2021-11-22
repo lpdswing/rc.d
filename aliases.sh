@@ -98,7 +98,6 @@ if which pyenv > /dev/null; then
 fi
 
 # ssh proxifier
-alias ac160='ssh -ND 1081 biomind@192.168.2.160'
 alias ac59='ssh -ND 1082 biomind@192.168.10.59'
 
 # golang
