@@ -13,6 +13,7 @@ RC_URL='https://github.com/lpdswing/rc.d.git'
 FiraCode_Nerd_URL='https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/FiraCode/Regular/complete/Fira%20Code%20Regular%20Nerd%20Font%20Complete.ttf'
 Monaco_Nerd_URL='https://github.com/lpdswing/monaco-nerd-fonts/raw/master/fonts/Monaco%20Nerd%20Font%20Complete.otf'
 fonts_dir="${HOME}/.local/share/fonts"
+NVM_URL='https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh'
 
 function exist() {
     which $1 > /dev/null
@@ -114,6 +115,18 @@ function install_ohmyzsh() {
         bash -c "$(curl -fsSL $OH_MY_ZSH_URL)"
     else
         echo "oh-my-zsh is already installed"
+    fi
+    echo 'done!'
+}
+
+
+function install_nvm() {
+    echo "exec: install_ohmyzsh"
+
+    if [ ! -d $HOME/.nvm ]; then
+        curl -o- $NVM_URL | bash
+    else
+        echo "nvm is already installed"
     fi
     echo 'done!'
 }
@@ -240,6 +253,7 @@ select a function code:
 【 5 】 Install pyenv
 【 6 】 Install python
 【 7 】 Install python pkg
+【 8 】 Install nvm
 【 9 】 Setup env
 【 0 】 Setup zsh theme
 【 v2 】 install_v2ray
@@ -265,6 +279,7 @@ case $choice in
     5) install_pyenv;;
     6) install_python;;
     7) install_python_pkg;;
+    8) install_nvm;;
     9) setup_env;;
     0) setup_zsh_theme;;
     v2) install_v2ray;;
