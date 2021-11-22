@@ -1,7 +1,0 @@
-[
-    { "keys": ["super+r"], "command": "goto_symbol_in_project" },
-    { "keys": ["super+shift+r"], "command": "show_overlay", "args": {"overlay": "goto", "text": "@"} },
-
-]
-
-//super 是command 或 win 键,根据系统是mac / windows
