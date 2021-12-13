@@ -5,7 +5,7 @@ CURRENT_DIR=$PWD
 RC_DIR="$HOME/.rc.d"
 LOCAL_BIN="$HOME/.local/bin"
 
-PYTHON_VERSION='3.10.0'
+PYTHON_VERSION='3.10.1'
 BREW_URL='https://raw.githubusercontent.com/Homebrew/install/master/install'
 OH_MY_ZSH_URL='https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh'
 PYENV_URL='https://raw.githubusercontent.com/pyenv/pyenv-installer/master/bin/pyenv-installer'
@@ -255,7 +255,7 @@ select a function code:
 【 7 】 Install python pkg
 【 8 】 Install nvm
 【 9 】 Setup env
-【 0 】 Setup zsh theme
+【 0 】 Setup zsh plugin
 【 v2 】 install_v2ray
 【 a 】 Install all
 【 x 】 Install softwares for macos
@@ -281,7 +281,7 @@ case $choice in
     7) install_python_pkg;;
     8) install_nvm;;
     9) setup_env;;
-    0) setup_zsh_theme;;
+    0) setup_zsh_plugin;;
     v2) install_v2ray;;
     a) install_all;;
     x) install_softwares_for_macos;;
