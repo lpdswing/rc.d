@@ -1,7 +1,3 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-
 ###
  # @Author: your name
  # @Date: 2020-11-06 15:40:19
@@ -16,7 +12,15 @@ export ZSH=$HOME/.oh-my-zsh
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-ZSH_THEME="agnoster"
+ZSH_THEME="powerlevel10k/powerlevel10k"
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 # Set list of themes to load
 # Setting this variable when ZSH_THEME=random
@@ -99,7 +103,6 @@ if [ -f "$HOME/.rc.d/functions.sh" ]; then
     source $HOME/.rc.d/functions.sh
 fi
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 
 export GOPATH=$HOME/go
 export PATH=$PATH:$GOPATH/bin
@@ -114,4 +117,4 @@ export NVM_DIR="$HOME/.nvm"
 
 export NVM_NODEJS_ORG_MIRROR=https://npm.taobao.org/mirrors/node/
 
-eval "$(oh-my-posh-wsl --init --shell zsh --config ~/paradox.omp.json)"
+#eval "$(oh-my-posh-wsl --init --shell zsh --config ~/paradox.omp.json)"
