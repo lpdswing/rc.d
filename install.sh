@@ -5,7 +5,7 @@ CURRENT_DIR=$PWD
 RC_DIR="$HOME/.rc.d"
 LOCAL_BIN="$HOME/.local/bin"
 
-PYTHON_VERSION='3.10.1'
+PYTHON_VERSION='3.12.0'
 BREW_URL='https://raw.githubusercontent.com/Homebrew/install/master/install'
 OH_MY_ZSH_URL='https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh'
 PYENV_URL='https://raw.githubusercontent.com/pyenv/pyenv-installer/master/bin/pyenv-installer'
@@ -13,7 +13,7 @@ RC_URL='https://github.com/lpdswing/rc.d.git'
 FiraCode_Nerd_URL='https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/FiraCode/Regular/complete/Fira%20Code%20Regular%20Nerd%20Font%20Complete.ttf'
 Monaco_Nerd_URL='https://github.com/lpdswing/monaco-nerd-fonts/raw/master/fonts/Monaco%20Nerd%20Font%20Complete.otf'
 fonts_dir="${HOME}/.local/share/fonts"
-NVM_URL='https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh'
+NVM_URL='https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh'
 
 function exist() {
     which $1 > /dev/null
@@ -41,23 +41,6 @@ function install_brew() {
 }
 
 
-function install_softwares_for_macos() {
-    echo "exec: install_softwares_for_macos"
-
-    ensure_rc
-
-    for pkg in `cat $RC_DIR/packages/cask-pkg`
-    do
-        read -p "Do you want to install '$pkg'? (y/n) " confirm
-        if [[ $confirm == "y" ]]
-        then
-            brew install --cask $pkg
-        fi
-    done
-
-    echo "done!"
-}
-
 
 function install_sys_packages() {
     echo "exec: install_sys_packages"
@@ -74,11 +57,6 @@ function install_sys_packages() {
         sudo apt update -y
         sudo apt upgrade -y
         sudo apt install -y `cat $RC_DIR/packages/apt-pkg`
-
-    elif `exist yum`; then
-        echo "installing rpm packages ..."
-        sudo yum update
-        sudo yum install -y `cat $RC_DIR/packages/yum-pkg`
 
     else
         echo 'not found any package installer'
@@ -191,11 +169,6 @@ function setup_env() {
     ln -sfv .rc.d/tmux.conf .tmux.conf
     ln -sfv .rc.d/myclirc .myclirc
 
-    # link aria2
-    mkdir -p $HOME/.aria2
-    cd $HOME/.aria2
-    ln -sfv $RC_DIR/aria2.conf aria2.conf
-
     touch $HOME/.zshrc.local
 
     echo 'done!'
@@ -219,16 +192,8 @@ function setup_zsh_plugin() {
     echo 'done!'
 }
 
-function install_v2ray() {
-    echo "exec: install_v2ray"
 
-    bash <(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
-
-    echo 'done!'
-}
-
-
-function install_all() {
+function install_all_mac() {
     ensure_rc
     install_brew
     install_sys_packages
@@ -236,12 +201,23 @@ function install_all() {
     install_ohmyzsh
     install_pyenv
     install_python
-    install_python_pkg
+    # install_python_pkg
     setup_env
     setup_zsh_plugin
-    install_v2ray
 }
 
+
+function install_all_ubuntu() {
+    ensure_rc
+    install_sys_packages
+    install_fonts
+    install_ohmyzsh
+    install_pyenv
+    install_python
+    # install_python_pkg
+    setup_env
+    setup_zsh_plugin
+}
 
 cat << EOF
 select a function code:
@@ -256,9 +232,8 @@ select a function code:
 【 8 】 Install nvm
 【 9 】 Setup env
 【 0 】 Setup zsh plugin
-【 v2 】 install_v2ray
-【 a 】 Install all
-【 x 】 Install softwares for macos
+【 am 】 Install all for macos
+【 au 】 Install all for ubuntu
 【 * 】 Exit
 ===============================
 EOF
@@ -282,9 +257,8 @@ case $choice in
     8) install_nvm;;
     9) setup_env;;
     0) setup_zsh_plugin;;
-    v2) install_v2ray;;
-    a) install_all;;
-    x) install_softwares_for_macos;;
+    am) install_all_mac;;
+    au) install_all_ubuntu;;
     *) echo 'Bye' && exit;;
 esac
 

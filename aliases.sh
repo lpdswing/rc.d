@@ -97,9 +97,6 @@ if which pyenv > /dev/null; then
     alias chgpy='pyenv global'
 fi
 
-# ssh proxifier
-alias ac59='ssh -ND 1082 biomind@192.168.10.59'
-
 # golang
 if [[ `uname` = "Linux" ]]; then
     export PATH=$PATH:/usr/local/go/bin
