@@ -36,3 +36,6 @@ wget
 wrk
 xz
 zlib
+python3-tk
+liblzma-dev
+tk-dev

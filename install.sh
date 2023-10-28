@@ -139,6 +139,7 @@ function install_python() {
     pyenv global $PYTHON_VERSION
 
     echo 'done!'
+    pip_config
 }
 
 
@@ -153,6 +154,12 @@ function install_python_pkg() {
     echo 'done!'
 }
 
+
+function pip_config() {
+    echo "exec: pip config"
+    pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+    echo 'done!'
+}
 
 
 function setup_env() {
@@ -232,8 +239,8 @@ select a function code:
 【 8 】 Install nvm
 【 9 】 Setup env
 【 0 】 Setup zsh plugin
-【 am 】 Install all for macos
-【 au 】 Install all for ubuntu
+【 m 】 Install all for macos
+【 u 】 Install all for ubuntu
 【 * 】 Exit
 ===============================
 EOF
@@ -257,8 +264,8 @@ case $choice in
     8) install_nvm;;
     9) setup_env;;
     0) setup_zsh_plugin;;
-    am) install_all_mac;;
-    au) install_all_ubuntu;;
+    m) install_all_mac;;
+    u) install_all_ubuntu;;
     *) echo 'Bye' && exit;;
 esac
 

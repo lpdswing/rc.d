@@ -43,3 +43,6 @@ wget
 zip
 zlib1g-dev
 zsh
+python3-tk
+liblzma-dev
+tk-dev
