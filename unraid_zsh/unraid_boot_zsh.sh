@@ -18,7 +18,7 @@ if [ -d "$OH_MY_ZSH_ROOT" ]; then
         exit 1
 fi
 # 安装 oh-my-zsh
-ZSH=$OH_MY_ZSH_ROOT sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+ZSH=$OH_MY_ZSH_ROOT RUNZSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 # Install zsh-autosuggestions
 if [ ! -d "$OH_MY_ZSH_PLUGINS/zsh-autosuggestions" ]; then
