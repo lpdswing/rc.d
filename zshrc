@@ -1,7 +1,7 @@
 ###
  # @Author: your name
  # @Date: 2020-11-06 15:40:19
- # @LastEditTime: 2021-02-20 14:07:15
+ # @LastEditTime: 2024-08-02 11:54:22
  # @LastEditors: Please set LastEditors
  # @Description: In User Settings Edit
  # @FilePath: /.rc.d/zshrc
@@ -79,6 +79,7 @@ plugins=(
     zsh-autosuggestions
     zsh-syntax-highlighting
     z
+    git
 )
 
 # source zshrc.local
