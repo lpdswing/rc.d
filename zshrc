@@ -105,11 +105,8 @@ if [ -f "$HOME/.rc.d/functions.sh" ]; then
 fi
 
 
-export GOPATH=$HOME/go
+export GOPATH=$HOME/sdk/go1.23.1
 export PATH=$PATH:$GOPATH/bin
-export PATH=$PATH:/Users/biomind/sdk/go1.16.4/bin/
-export PATH="/usr/local/opt/openssl@1.1/bin:$PATH"
-export PATH="/usr/local/opt/openjdk/bin:$PATH"
 source <(kubectl completion zsh)
 
 export NVM_DIR="$HOME/.nvm"
