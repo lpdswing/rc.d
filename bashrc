@@ -47,3 +47,7 @@ if [ -f "$HOME/.rc.d/functions.sh" ]; then
     source $HOME/.rc.d/functions.sh
 fi
 . "$HOME/.cargo/env"
+
+### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
+export PATH="/Users/lpdswing/.rd/bin:$PATH"
+### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)

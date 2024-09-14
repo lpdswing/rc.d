@@ -107,7 +107,6 @@ fi
 
 export GOPATH=$HOME/sdk/go1.23.1
 export PATH=$PATH:$GOPATH/bin
-source <(kubectl completion zsh)
 
 export NVM_DIR="$HOME/.nvm"
   [ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
@@ -116,3 +115,9 @@ export NVM_DIR="$HOME/.nvm"
 export NVM_NODEJS_ORG_MIRROR=https://npm.taobao.org/mirrors/node/
 
 #eval "$(oh-my-posh-wsl --init --shell zsh --config ~/paradox.omp.json)"
+
+### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
+export PATH="/Users/lpdswing/.rd/bin:$PATH"
+### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
+
+source <(kubectl completion zsh)
