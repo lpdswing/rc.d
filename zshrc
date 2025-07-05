@@ -105,19 +105,35 @@ if [ -f "$HOME/.rc.d/functions.sh" ]; then
 fi
 
 
-export GOPATH=$HOME/sdk/go1.23.1
-export PATH=$PATH:$GOPATH/bin
-
-export NVM_DIR="$HOME/.nvm"
-  [ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
-  [ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && . "/usr/local/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
-
-export NVM_NODEJS_ORG_MIRROR=https://npm.taobao.org/mirrors/node/
-
-#eval "$(oh-my-posh-wsl --init --shell zsh --config ~/paradox.omp.json)"
-
-### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
-export PATH="/Users/lpdswing/.rd/bin:$PATH"
-### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
-
 source <(kubectl completion zsh)
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/Users/lpdswing/.pyenv/versions/miniconda3-latest/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/Users/lpdswing/.pyenv/versions/miniconda3-latest/etc/profile.d/conda.sh" ]; then
+        . "/Users/lpdswing/.pyenv/versions/miniconda3-latest/etc/profile.d/conda.sh"
+    else
+        export PATH="/Users/lpdswing/.pyenv/versions/miniconda3-latest/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/lpdswing/.lmstudio/bin"
+
+# fnm
+FNM_PATH="/Users/lpdswing/Library/Application Support/fnm"
+if [ -d "$FNM_PATH" ]; then
+  export PATH="/Users/lpdswing/Library/Application Support/fnm:$PATH"
+  eval "`fnm env`"
+fi
+eval "$(fnm env --use-on-cd --shell zsh)"
+
+. "$HOME/.local/bin/env"
+
+

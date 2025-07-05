@@ -6,7 +6,7 @@
  # @LastEditors: Please set LastEditors
  # @Description: In User Settings Edit
  # @FilePath: /.rc.d/functions.sh
-### 
+###
 wk() {
     if [[ -f "$1/.venv/bin/activate" ]]; then
         source $1/.venv/bin/activate
@@ -27,9 +27,9 @@ wk() {
 proxy() {
     if [ -z "$ALL_PROXY" ]; then
         if [[ $1 == "-s" ]]; then
-            export ALL_PROXY="socks5://127.0.0.1:10808"
+            export ALL_PROXY="socks5://127.0.0.1:7890"
         else
-            export ALL_PROXY="http://127.0.0.1:10809"
+            export ALL_PROXY="http://127.0.0.1:7890"
         fi
         printf "Proxy on: $ALL_PROXY\n";
     else

@@ -29,10 +29,7 @@ alias grep='grep -I --color=auto --exclude-dir={.git,.hg,.svn,.venv}'
 alias psgrep='ps ax|grep -v grep|grep'
 alias tree='tree -C --dirsfirst'
 alias less='less -N'
-alias aria='aria2c -c -x 16 --file-allocation=none'
-alias axel='axel -n 30'
 alias ping='ping -i 0.5 -c 10'
-alias vnccnt='netstat -nat|grep -w 5900|grep -c ESTABLISHED '
 
 # macOS alias
 if [ `uname` = "Darwin" ]; then
@@ -65,8 +62,8 @@ if [[ $plugins =~ 'pip' ]]; then
 fi
 
 # Git alias
-alias gst='git status -sb'
-alias gstt='git status'
+alias gstsb='git status -sb'
+alias gst='git status'
 alias gdf='git difftool'
 alias glg="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
 alias gco='git checkout'
@@ -98,6 +95,6 @@ if which pyenv > /dev/null; then
 fi
 
 # golang
-if [[ `uname` = "Linux" ]]; then
-    export PATH=$PATH:/usr/local/go/bin
-fi
+# if [[ `uname` = "Linux" ]]; then
+#     export PATH=$PATH:/usr/local/go/bin
+# fi

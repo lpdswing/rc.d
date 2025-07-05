@@ -5,15 +5,11 @@ CURRENT_DIR=$PWD
 RC_DIR="$HOME/.rc.d"
 LOCAL_BIN="$HOME/.local/bin"
 
-PYTHON_VERSION='3.11.6'
-BREW_URL='https://raw.githubusercontent.com/Homebrew/install/master/install'
-OH_MY_ZSH_URL='https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh'
-PYENV_URL='https://raw.githubusercontent.com/pyenv/pyenv-installer/master/bin/pyenv-installer'
+BREW_URL='https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh'
+OH_MY_ZSH_URL='https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh'
 RC_URL='https://github.com/lpdswing/rc.d.git'
-FiraCode_Nerd_URL='https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/FiraCode/Regular/complete/Fira%20Code%20Regular%20Nerd%20Font%20Complete.ttf'
-Monaco_Nerd_URL='https://github.com/lpdswing/monaco-nerd-fonts/raw/master/fonts/Monaco%20Nerd%20Font%20Complete.otf'
-fonts_dir="${HOME}/.local/share/fonts"
-NVM_URL='https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh'
+
+
 
 function exist() {
     which $1 > /dev/null
@@ -66,25 +62,6 @@ function install_sys_packages() {
 }
 
 
-function install_fonts() {
-    echo "exec: install_fonts"
-
-    if [[ `uname` == 'Darwin' ]]; then
-        cd ~/Library/Fonts && curl -fLo "Fira Code Regular Nerd Font Complete.ttf" $FiraCode_Nerd_URL && curl -fLo "Monaco Nerd Font Complete.otf" $Monaco_Nerd_URL
-    else
-        if [ ! -d "${fonts_dir}" ]; then
-            echo "mkdir -p $fonts_dir"
-            mkdir -p "${fonts_dir}"
-        else
-            echo "Found fonts dir $fonts_dir"
-        fi
-        cd $fonts_dir && curl -fLo "Fira Code Regular Nerd Font Complete.ttf" $FiraCode_Nerd_URL && curl -fLo "Monaco Nerd Font Complete.otf" $Monaco_Nerd_URL
-        echo "fc-cache -f"
-        fc-cache -f
-    fi
-    echo 'done!'
-}
-
 
 function install_ohmyzsh() {
     echo "exec: install_ohmyzsh"
@@ -97,62 +74,6 @@ function install_ohmyzsh() {
     echo 'done!'
 }
 
-
-function install_nvm() {
-    echo "exec: install_ohmyzsh"
-
-    if [ ! -d $HOME/.nvm ]; then
-        curl -o- $NVM_URL | bash
-    else
-        echo "nvm is already installed"
-    fi
-    echo 'done!'
-}
-
-
-function install_pyenv() {
-    echo "exec: install_pyenv"
-
-    if [ ! -d $HOME/.pyenv ]; then
-        curl -L $PYENV_URL | bash
-        export PATH="$HOME/.pyenv/bin:$PATH"
-        eval "$(pyenv init -)"
-        eval "$(pyenv virtualenv-init -)"
-        pyenv update
-    else
-        echo "pyenv is already installed"
-    fi
-
-    echo 'done!'
-}
-
-
-function install_python() {
-    echo "exec: install_python"
-
-    if ! pyenv versions | grep $PYTHON_VERSION > /dev/null; then
-        pyenv install -kv $PYTHON_VERSION
-    else
-        echo "Python v$PYTHON_VERSION is already installed"
-    fi
-
-    pyenv global $PYTHON_VERSION
-
-    echo 'done!'
-    pip_config
-}
-
-
-function install_python_pkg() {
-    echo "exec: install_python_pkg"
-
-    ensure_rc
-
-    pyenv global $PYTHON_VERSION
-    pip install -r $RC_DIR/packages/python-pkg
-
-    echo 'done!'
-}
 
 
 function pip_config() {
@@ -174,7 +95,6 @@ function setup_env() {
     ln -sfv .rc.d/zshrc .zshrc
     ln -sfv .rc.d/bashrc .bashrc
     ln -sfv .rc.d/tmux.conf .tmux.conf
-    ln -sfv .rc.d/myclirc .myclirc
 
     touch $HOME/.zshrc.local
 
@@ -200,47 +120,16 @@ function setup_zsh_plugin() {
 }
 
 
-function install_all_mac() {
-    ensure_rc
-    install_brew
-    install_sys_packages
-    install_fonts
-    install_ohmyzsh
-    install_pyenv
-    install_python
-    # install_python_pkg
-    setup_env
-    setup_zsh_plugin
-}
 
-
-function install_all_ubuntu() {
-    ensure_rc
-    install_sys_packages
-    install_fonts
-    install_ohmyzsh
-    install_pyenv
-    install_python
-    # install_python_pkg
-    setup_env
-    setup_zsh_plugin
-}
 
 cat << EOF
 select a function code:
 ===============================
 【 1 】 Install brew
-【 2 】 Install sys packages
-【 3 】 Install fonts
-【 4 】 Install oh-my-zsh
-【 5 】 Install pyenv
-【 6 】 Install python
-【 7 】 Install python pkg
-【 8 】 Install nvm
-【 9 】 Setup env
-【 0 】 Setup zsh plugin
-【 m 】 Install all for macos
-【 u 】 Install all for ubuntu
+【 2 】 Install oh-my-zsh
+【 3 】 Setup env
+【 4 】 Setup zsh plugin
+【 5 】 pip config
 【 * 】 Exit
 ===============================
 EOF
@@ -255,17 +144,10 @@ fi
 
 case $choice in
     1) install_brew;;
-    2) install_sys_packages;;
-    3) install_fonts;;
-    4) install_ohmyzsh;;
-    5) install_pyenv;;
-    6) install_python;;
-    7) install_python_pkg;;
-    8) install_nvm;;
-    9) setup_env;;
-    0) setup_zsh_plugin;;
-    m) install_all_mac;;
-    u) install_all_ubuntu;;
+    2) install_ohmyzsh;;
+    3) setup_env;;
+    4) setup_zsh_plugin;;
+    5) pip_config;;
     *) echo 'Bye' && exit;;
 esac
 
