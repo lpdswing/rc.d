@@ -1,155 +1,156 @@
 #!/bin/bash
 
-CURRENT_DIR=$PWD
-
 RC_DIR="$HOME/.rc.d"
-LOCAL_BIN="$HOME/.local/bin"
-
-BREW_URL='https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh'
-OH_MY_ZSH_URL='https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh'
 RC_URL='https://github.com/lpdswing/rc.d.git'
 
+# 颜色定义
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
 
-
-function exist() {
-    which $1 > /dev/null
-    return $?
+function print_success() {
+    echo -e "${GREEN}✓${NC} $1"
 }
 
+function print_info() {
+    echo -e "${YELLOW}→${NC} $1"
+}
 
 function ensure_rc() {
-    if [ ! -d $RC_DIR ]; then
-        git clone $RC_URL $RC_DIR
+    if [ ! -d "$RC_DIR" ]; then
+        print_info "克隆配置仓库到 $RC_DIR ..."
+        git clone "$RC_URL" "$RC_DIR"
+        print_success "仓库克隆完成"
     fi
 }
 
-
+# 安装 Homebrew (仅 macOS)
 function install_brew() {
-    echo "exec: install_brew"
+    print_info "安装 Homebrew..."
 
-    if [[ `uname` == 'Darwin' ]] && ! `exist brew`
-    then
-        xcode-select --install
-        ruby -e "$(curl -fsSL $BREW_URL)"
+    if [[ $(uname) != 'Darwin' ]]; then
+        echo "仅支持 macOS"
+        return 1
     fi
 
-    echo 'done!'
+    if command -v brew &>/dev/null; then
+        print_success "Homebrew 已安装"
+        return 0
+    fi
+
+    print_info "安装 Xcode Command Line Tools..."
+    xcode-select --install
+
+    print_info "安装 Homebrew..."
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+    print_success "Homebrew 安装完成"
 }
 
+# 安装 Starship
+function install_starship() {
+    print_info "安装 Starship 提示符..."
 
+    if command -v starship &>/dev/null; then
+        print_success "Starship 已安装"
+        return 0
+    fi
 
-function install_sys_packages() {
-    echo "exec: install_sys_packages"
-
-    ensure_rc
-
-    if [[ `uname` == 'Darwin' ]]; then
-        echo "installing brew packages ..."
-        brew -v update
-        brew install `cat $RC_DIR/packages/brew-pkg`
-
-    elif `exist apt-get`; then
-        echo "installing deb packages ..."
-        sudo apt update -y
-        sudo apt upgrade -y
-        sudo apt install -y `cat $RC_DIR/packages/apt-pkg`
-
+    if [[ $(uname) == 'Darwin' ]]; then
+        brew install starship
+    elif command -v curl &>/dev/null; then
+        curl -sS https://starship.rs/install.sh | sh
     else
-        echo 'not found any package installer'
+        echo "请手动安装 Starship: https://starship.rs"
+        return 1
     fi
 
-    echo 'done!'
+    print_success "Starship 安装完成"
 }
 
-
-
-function install_ohmyzsh() {
-    echo "exec: install_ohmyzsh"
-
-    if [ ! -d $HOME/.oh-my-zsh ]; then
-        bash -c "$(curl -fsSL $OH_MY_ZSH_URL)"
-    else
-        echo "oh-my-zsh is already installed"
-    fi
-    echo 'done!'
-}
-
-
-
-function pip_config() {
-    echo "exec: pip config"
-    pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
-    echo 'done!'
-}
-
-
+# 配置环境（链接配置文件）
 function setup_env() {
-    echo "exec: setup_env"
+    print_info "配置环境..."
 
     ensure_rc
 
-    # link rc files
-    cd $HOME
+    cd "$HOME" || exit
+
+    # 链接配置文件
     ln -sfv .rc.d/gitconfig .gitconfig
     ln -sfv .rc.d/vimrc .vimrc
     ln -sfv .rc.d/zshrc .zshrc
     ln -sfv .rc.d/bashrc .bashrc
     ln -sfv .rc.d/tmux.conf .tmux.conf
 
-    touch $HOME/.zshrc.local
+    # 创建本地配置文件
+    touch "$HOME/.zshrc.local"
 
-    echo 'done!'
+    print_success "环境配置完成"
 }
 
+# 配置 pip 镜像源
+function pip_config() {
+    print_info "配置 pip 镜像源..."
 
-function setup_zsh_plugin() {
-    echo "exec: setup_zsh_plugin"
-
-    ensure_rc
-
-    if [ -d "$HOME/.oh-my-zsh/custom/" ]; then
-        git clone --depth=1 https://gitee.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
-        git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-        git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-    else
-        echo "Please install ohmyzsh first."
-        exit 1
+    if ! command -v pip &>/dev/null && ! command -v pip3 &>/dev/null; then
+        echo "未找到 pip"
+        return 1
     fi
 
-    echo 'done!'
+    pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+
+    print_success "pip 镜像源配置完成"
 }
 
+# 一键安装
+function install_all() {
+    print_info "开始一键安装..."
 
+    if [[ $(uname) == 'Darwin' ]]; then
+        install_brew
+    fi
 
+    install_starship
+    setup_env
 
-cat << EOF
-select a function code:
-===============================
-【 1 】 Install brew
-【 2 】 Install oh-my-zsh
-【 3 】 Setup env
-【 4 】 Setup zsh plugin
-【 5 】 pip config
-【 * 】 Exit
-===============================
+    print_success "安装完成！"
+    echo ""
+    echo "请执行以下命令重新加载配置："
+    echo "  source ~/.zshrc"
+    echo ""
+    echo "提示：Zinit 将在首次启动 Zsh 时自动安装"
+}
+
+# 显示菜单
+function show_menu() {
+    cat << EOF
+
+RC.D 配置安装脚本
+================================
+【 1 】 一键安装（推荐）
+【 2 】 安装 Homebrew (macOS)
+【 3 】 安装 Starship
+【 4 】 配置环境（链接配置文件）
+【 5 】 配置 pip 镜像源
+【 0 】 退出
+================================
 EOF
+}
 
-
+# 主程序
 if [[ -n $1 ]]; then
     choice=$1
-    echo "exec: $1"
 else
-    read -p "select: " choice
+    show_menu
+    read -p "请选择: " choice
 fi
 
 case $choice in
-    1) install_brew;;
-    2) install_ohmyzsh;;
-    3) setup_env;;
-    4) setup_zsh_plugin;;
+    1) install_all;;
+    2) install_brew;;
+    3) install_starship;;
+    4) setup_env;;
     5) pip_config;;
-    *) echo 'Bye' && exit;;
+    0|*) echo "退出" && exit;;
 esac
-
-
-cd $CURRENT_DIR

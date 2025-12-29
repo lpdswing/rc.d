@@ -19,18 +19,6 @@ fi
 
 export HISTTIMEFORMAT="[%y-%m-%d_%T]  "
 
-# automatic set_window_title when use screen
-if [[ "$TERM" == screen* ]]; then
-    screen_set_window_title () {
-        local HPWD="$PWD"
-        case $HPWD in
-            $HOME) HPWD="~";;
-            $HOME/*) HPWD="~${HPWD#$HOME}";;
-        esac
-        printf '\ek%s\e\\' "$HPWD"
-    }
-    PROMPT_COMMAND="screen_set_window_title; $PROMPT_COMMAND"
-fi
 
 # Load bashrc on MacOS
 if [ `uname` = "Darwin" ]; then
@@ -46,9 +34,3 @@ fi
 if [ -f "$HOME/.rc.d/functions.sh" ]; then
     source $HOME/.rc.d/functions.sh
 fi
-
-
-# Added by LM Studio CLI (lms)
-export PATH="$PATH:/Users/lpdswing/.lmstudio/bin"
-
-. "$HOME/.local/bin/env"

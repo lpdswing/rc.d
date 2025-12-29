@@ -1,64 +1,57 @@
+" 启用语法高亮
 if has("syntax")
   syntax on
 endif
 
-" Uncomment the following to have Vim jump to the last position when
-" reopening a file
+" 重新打开文件时跳转到上次编辑位置
 if has("autocmd")
   au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 endif
 
-" Uncomment the following to have Vim load indentation rules and plugins
-" according to the detected filetype.
-"if has("autocmd")
-"  filetype plugin indent on
-"endif
+" 基础设置
+set showcmd         " 显示未完成的命令
+set showmatch       " 高亮匹配的括号
+set ignorecase      " 搜索忽略大小写
+set smartcase       " 如果包含大写字母则区分大小写
+set incsearch       " 增量搜索
 
-" The following are commented out as they cause vim to behave a lot
-" differently from regular Vi. They are highly recommended though.
-set showcmd         " Show (partial) command in status line.
-set showmatch       " Show matching brackets.
-set ignorecase      " Do case insensitive matching
-set smartcase       " Do smart case matching
-set incsearch       " Incremental search
-
-" Source a global configuration file if available
+" 加载系统全局配置（如果存在）
 if filereadable("/etc/vim/vimrc.local")
   source /etc/vim/vimrc.local
 endif
 
-"自定义
+" 外观主题
 color desert
 set t_Co=256
-set background=dark     "背景色
-set nu
-set nocompatible        "非兼容模式
-set ruler               "在左下角显示当前文件所在行
-set report=0            "显示修改次数
-set nobackup            "无备份
+set background=dark
+set nu                      " 显示行号
+set nocompatible            " 不兼容 Vi 模式
+set ruler                   " 显示光标位置
+set report=0                " 显示修改次数
+set nobackup                " 不创建备份文件
 set fileencodings=ucs-bom,UTF-8,GBK,BIG5,latin1
 set fileencoding=UTF-8
-set fileformat=unix     "换行使用unix方式
-set wrap
-set linebreak
-set ambiwidth=double
-set noerrorbells        "不显示响铃
-set visualbell          "可视化铃声
-set foldmarker={,}      "缩进符号
-set foldmethod=indent   "缩进作为折叠标识
-set foldlevel=100       "不自动折叠
-set foldopen-=search    "搜索时不打开折叠
-set foldopen-=undo      "撤销时不打开折叠
-set updatecount=0       "不使用交换文件
-set magic               "使用正则时，除了$ . * ^以外的元字符都要加反斜线
+set fileformat=unix         " 使用 Unix 换行符
+set wrap                    " 自动换行
+set linebreak               " 在单词边界换行
+set ambiwidth=double        " 中文字符宽度
+set noerrorbells            " 关闭错误响铃
+set visualbell              " 使用可视化铃声
+set foldmarker={,}          " 折叠标记符
+set foldmethod=indent       " 根据缩进折叠
+set foldlevel=100           " 打开文件时不自动折叠
+set foldopen-=search        " 搜索时不打开折叠
+set foldopen-=undo          " 撤销时不打开折叠
+set updatecount=0           " 不使用交换文件
+set magic                   " 正则表达式魔术模式
 
-"缩进定义
+" 缩进设置
 set shiftwidth=4
 set tabstop=4
 set softtabstop=4
-set expandtab
+set expandtab               " 用空格代替 Tab
 set smarttab
-set backspace=2     "退格键可以删除任何东西
+set backspace=2             " 退格键可以删除任何内容
 
 " 当前行高亮
 set cursorline
@@ -69,16 +62,17 @@ highlight LineNr     cterm=none    ctermfg=gray     ctermbg=none
 set hlsearch
 highlight Search     cterm=none    ctermfg=black    ctermbg=blue
 
-" vimdiff 高亮
+" vimdiff 高亮配色
 highlight DiffAdd    cterm=reverse ctermfg=darkcyan ctermbg=black
 highlight DiffDelete cterm=none    ctermfg=gray     ctermbg=239
 highlight DiffChange cterm=none    ctermfg=none     ctermbg=239
 highlight DiffText   cterm=bold    ctermfg=yellow   ctermbg=darkred
 
-auto BufWritePre * sil %s/\s\+$//ge "保存时删除行尾空白
+" 保存时自动删除行尾空白
+auto BufWritePre * sil %s/\s\+$//ge
 
-"映射常用操作
-map [r :! python % <CR>
-map [o :! python -i % <CR>
-map <C-j> :He<CR>
-map <C-l> :Ve!<CR>
+" 快捷键映射
+map [r :! python3 % <CR>     " [r: 运行 Python 文件
+map [o :! python3 -i % <CR>  " [o: 交互式运行 Python 文件
+map <C-j> :He<CR>            " Ctrl+j: 水平分屏浏览
+map <C-l> :Ve!<CR>           " Ctrl+l: 垂直分屏浏览
