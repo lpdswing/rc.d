@@ -1,36 +1,122 @@
-export GREP_COLOR='1;31'
+# ============================================================================
+# 环境变量
+# ============================================================================
+
+export GREP_COLORS='mt=1;31'
 export LC_ALL="zh_CN.UTF-8"
+# export LESS='-NRF'
+# export LESSOPEN='| pygmentize -g -O style=native %s'
 
-# PATH setup
-[[ -d "$HOME/.local/bin" ]] && export PATH="$HOME/.local/bin:$PATH"
-[[ "$(uname)" = "Darwin" ]] && export PATH="/usr/local/sbin:$PATH"
+# PATH 设置（避免重复添加）
+[[ ! ":${PATH}:" =~ "/usr/local/sbin" ]] && export PATH="/usr/local/sbin:$PATH"
+[[ ! ":${PATH}:" =~ "$HOME/.local/bin" ]] && export PATH="$HOME/.local/bin:$PATH"
+[[ ! ":${PATH}:" =~ "$HOME/.local/utils" ]] && export PATH="$HOME/.local/utils:$PATH"
 
-# Common aliases
-alias l='ls -Clho'
+# ============================================================================
+# 通用别名
+# ============================================================================
+
+alias l='ls -ClhoF'
+alias li='ls -Clhoi'
 alias ll='ls -ClhF'
 alias la='ls -A'
 alias lla='ls -ClhFA'
-alias rs='rsync -cvrzP --exclude={.git,.hg,.svn,.venv,.DS_Store}'
-alias grep='grep -I --color=auto --exclude-dir={.git,.hg,.svn,.venv}'
-alias psgrep='ps ax|grep -v grep|grep'
-alias tree='tree -C --dirsfirst'
-alias ping='ping -c 10'
+# alias rm='rm -v'  # 删目录会刷屏，按需启用
+alias cp='cp -nv'
+alias mv='mv -nv'
+alias ln='ln -v'
+alias rs="rsync -crvzptHP --exclude='.[A-Za-z0-9._-]*' --exclude={__pycache__,'*.pyc'}"
+alias grep="grep -I --color=auto --exclude-dir='.[A-Za-z0-9._-]*'"
+alias psgrep='pscm|grep -v grep|grep'
+alias tree='tree -N -C --dirsfirst'
+alias tailf='tail -F'
 alias rmds='find . -type f -name .DS_Store -delete'
 
-# macOS specific
+# 网络工具
+alias aria='aria2c -c -x 16 --file-allocation=none'
+alias axel='axel -n 30'
+alias myip='curl -Ls http://seamile.cn/myip'
+alias ping='ping -i 0.2 -c 10'
+alias ping6='ping6 -i 0.2 -c 10'
+alias ip4="ifconfig | grep -w inet | awk '{print \$2}'| sort"
+alias ip6="ifconfig | grep -w inet6 | awk '{print \$2}'| sort"
+
+# tmux
+alias tm='tmux attach || tmux'
+
+# ============================================================================
+# macOS 专用
+# ============================================================================
+
 if [[ "$(uname)" = "Darwin" ]]; then
-    alias tailf='tail -F'
+    export HOMEBREW_NO_AUTO_UPDATE=true
+    # export HOMEBREW_BREW_GIT_REMOTE="https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/brew.git"
+    # export HOMEBREW_CORE_GIT_REMOTE="https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-core.git"
+    export HOMEBREW_BOTTLE_DOMAIN="https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles"
+    export HOMEBREW_NO_INSTALL_CLEANUP=1
+
+    alias showfiles="defaults write com.apple.finder AppleShowAllFiles -bool true && killall Finder"
+    alias hidefiles="defaults write com.apple.finder AppleShowAllFiles -bool false && killall Finder"
+    alias lock="sudo chflags schg"
+    alias unlock="sudo chflags noschg"
 fi
 
-# Python aliases
-alias py='python3'
+# ============================================================================
+# Python
+# ============================================================================
+
+alias py='python'
 alias ipy='ipython'
-alias jpy='jupyter notebook'
+alias httpserver='python -m http.server'
+alias pip-search='pip_search'
 alias rmpyc='find . | grep -wE "py[co]|__pycache__" | xargs rm -rvf'
 alias pygrep='grep --include="*.py"'
-alias serve='python3 -m http.server'
+alias pip='uv pip'
+alias venv='uv venv'
+alias upy='uv python'
 
-# Git aliases
+# ============================================================================
+# Git
+# ============================================================================
+
+alias gad='git add'
+alias gst='git status -sb'
 alias gdf='git difftool'
-alias glg="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+alias glg='git log --stat --graph --max-count=10'
+alias gpl='git pull'
+alias gci='git commit'
+alias gco='git checkout'
+alias gsw='git switch'
 alias gmg='git merge --no-commit --squash'
+
+# ============================================================================
+# 开发环境
+# ============================================================================
+
+# Homebrew
+if command -v brew >/dev/null 2>&1; then
+    BREWHOME="${HOMEBREW_PREFIX:-/usr/local}"
+    export LDFLAGS="-L$BREWHOME/lib"
+    export CPPFLAGS="-I$BREWHOME/include"
+    export PKG_CONFIG_PATH="$BREWHOME/lib/pkgconfig"
+fi
+
+# Rust
+if [[ -d "$HOME/.cargo" && ! ":${PATH}:" =~ "$HOME/.cargo/bin" ]]; then
+    export PATH="$HOME/.cargo/bin:$PATH"
+fi
+
+# Golang
+if command -v go >/dev/null 2>&1; then
+    export GOPATH="$HOME/src/Golang"
+    export PATH="$GOPATH/bin:$PATH"
+    export GOPROXY="https://goproxy.cn"
+fi
+
+# pnpm
+if [[ -d "$HOME/.local/share/pnpm" ]]; then
+    export PNPM_HOME="$HOME/.local/share/pnpm"
+    export PATH="$PNPM_HOME:$PATH"
+    alias npm='pnpm'
+    alias npx='pnpx'
+fi
