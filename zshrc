@@ -142,7 +142,8 @@ setopt glob_dots
 
 eval "$(starship init zsh)"
 
-
+eval "$(fnm env --use-on-cd --shell zsh)"
+eval "$(fnm completions --shell zsh)"
 # ============================================================================
 # 加载自定义配置
 # ============================================================================
@@ -150,3 +151,5 @@ eval "$(starship init zsh)"
 [[ -f "$HOME/.rc.d/aliases.sh" ]] && source "$HOME/.rc.d/aliases.sh"
 [[ -f "$HOME/.rc.d/functions.sh" ]] && source "$HOME/.rc.d/functions.sh"
 [[ -f "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"
+eval "$(uv generate-shell-completion zsh)"
+eval "$(uvx --generate-shell-completion zsh)"
