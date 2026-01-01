@@ -54,11 +54,11 @@ plugins=(
     colored-man-pages           # 彩色 man 手册
     command-not-found           # 命令未找到时建议安装
     fzf                         # fzf 集成
+    fzf-tab                     # fzf 补全增强（在 fzf 之后）
     zsh-autosuggestions         # 命令自动建议
+    zsh-autopair                # 括号自动配对
+    zsh-history-substring-search # 历史子串搜索
     zsh-syntax-highlighting     # 语法高亮（必须放最后）
-    zsh-history-substring-search
-    zsh-autopair
-    fzf-tab
 )
 
 # 加载 Oh My Zsh
@@ -139,11 +139,15 @@ setopt glob_dots
 # Starship 提示符
 # ============================================================================
 
-
 eval "$(starship init zsh)"
+
+# ============================================================================
+# fnm - Node.js 版本管理
+# ============================================================================
 
 eval "$(fnm env --use-on-cd --shell zsh)"
 eval "$(fnm completions --shell zsh)"
+
 # ============================================================================
 # 加载自定义配置
 # ============================================================================
@@ -151,5 +155,16 @@ eval "$(fnm completions --shell zsh)"
 [[ -f "$HOME/.rc.d/aliases.sh" ]] && source "$HOME/.rc.d/aliases.sh"
 [[ -f "$HOME/.rc.d/functions.sh" ]] && source "$HOME/.rc.d/functions.sh"
 [[ -f "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"
+
+# ============================================================================
+# UV - Python 包管理器
+# ============================================================================
+
 eval "$(uv generate-shell-completion zsh)"
 eval "$(uvx --generate-shell-completion zsh)"
+
+# ============================================================================
+# Kiro - AI IDE 集成
+# ============================================================================
+
+[[ "$TERM_PROGRAM" == "kiro" ]] && . "$(kiro --locate-shell-integration-path zsh)"

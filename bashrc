@@ -1,11 +1,21 @@
-# Set PS1
+# ============================================================================
+# Bash 配置
+# ============================================================================
+
+# ============================================================================
+# 提示符配置
+# ============================================================================
+
 if [ `id -u` == 0 ]; then
     PS1="\[$(tput bold)\]\[$(tput setaf 1)\]\u\[$(tput sgr0)\]\[$(tput setaf 4)\]@\[$(tput sgr0)\]\[$(tput setaf 5)\]\h \[$(tput sgr0)\]\w\[$(tput bold)\]\[$(tput setaf 1)\] \\$ \[$(tput sgr0)\]"
 else
     PS1="\[$(tput bold)\]\[$(tput setaf 3)\]\u\[$(tput sgr0)\]\[$(tput setaf 4)\]@\[$(tput sgr0)\]\[$(tput setaf 5)\]\h \[$(tput sgr0)\]\w\[$(tput bold)\]\[$(tput setaf 4)\] \\$ \[$(tput sgr0)\]"
 fi
 
-# enable color support of ls and also add handy aliases
+# ============================================================================
+# 颜色支持
+# ============================================================================
+
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
     alias ls='ls --color=auto'
@@ -17,22 +27,32 @@ if [ -x /usr/bin/dircolors ]; then
     alias egrep='egrep --color=auto'
 fi
 
-export HISTTIMEFORMAT="[%y-%m-%d_%T]  "
-
-
-# Load bashrc on MacOS
+# macOS ls 颜色
 if [ `uname` = "Darwin" ]; then
     alias ls='ls -G'
 fi
 
-# source aliases.sh
-if [ -f "$HOME/.rc.d/aliases.sh" ]; then
-    source $HOME/.rc.d/aliases.sh
-fi
+# ============================================================================
+# 历史记录配置
+# ============================================================================
 
-# source functions.sh
-if [ -f "$HOME/.rc.d/functions.sh" ]; then
-    source $HOME/.rc.d/functions.sh
-fi
+export HISTTIMEFORMAT="[%y-%m-%d_%T]  "
 
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+# ============================================================================
+# 加载自定义配置
+# ============================================================================
+
+[[ -f "$HOME/.rc.d/aliases.sh" ]] && source "$HOME/.rc.d/aliases.sh"
+[[ -f "$HOME/.rc.d/functions.sh" ]] && source "$HOME/.rc.d/functions.sh"
+
+# ============================================================================
+# fzf 集成
+# ============================================================================
+
+[[ -f ~/.fzf.bash ]] && source ~/.fzf.bash
+
+# ============================================================================
+# Kiro - AI IDE 集成
+# ============================================================================
+
+[[ "$TERM_PROGRAM" == "kiro" ]] && . "$(kiro --locate-shell-integration-path bash)"
