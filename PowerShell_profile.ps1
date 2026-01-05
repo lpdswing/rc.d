@@ -121,6 +121,45 @@ function editprofile { code $PROFILE }
 function reloadprofile { . $PROFILE }
 
 # ============================================================================
+# 命令补全模块
+# 安装: Install-Module posh-git, DockerCompletion, PSReadLine -Scope CurrentUser
+# ============================================================================
+
+# Git 补全 + 状态提示
+if (Get-Module -ListAvailable -Name posh-git) { Import-Module posh-git }
+
+# Docker 补全
+if (Get-Module -ListAvailable -Name DockerCompletion) { Import-Module DockerCompletion }
+
+# PSReadLine 增强
+if (Get-Module -ListAvailable -Name PSReadLine) {
+    # 历史记录
+    Set-PSReadLineOption -HistorySearchCursorMovesToEnd
+    Set-PSReadLineOption -HistoryNoDuplicates
+    Set-PSReadLineOption -MaximumHistoryCount 10000
+
+    # 预测和补全
+    Set-PSReadLineOption -PredictionSource History
+    Set-PSReadLineOption -PredictionViewStyle ListView
+
+    # 快捷键
+    Set-PSReadLineKeyHandler -Key UpArrow -Function HistorySearchBackward
+    Set-PSReadLineKeyHandler -Key DownArrow -Function HistorySearchForward
+    Set-PSReadLineKeyHandler -Key Tab -Function MenuComplete
+    Set-PSReadLineKeyHandler -Key Ctrl+d -Function DeleteCharOrExit
+    Set-PSReadLineKeyHandler -Key Ctrl+w -Function BackwardDeleteWord
+    Set-PSReadLineKeyHandler -Key Alt+d -Function DeleteWord
+    Set-PSReadLineKeyHandler -Key Ctrl+LeftArrow -Function BackwardWord
+    Set-PSReadLineKeyHandler -Key Ctrl+RightArrow -Function ForwardWord
+    Set-PSReadLineKeyHandler -Key Ctrl+z -Function Undo
+    Set-PSReadLineKeyHandler -Key Ctrl+r -Function ReverseSearchHistory
+    Set-PSReadLineKeyHandler -Key Ctrl+u -Function BackwardDeleteLine
+    Set-PSReadLineKeyHandler -Key Ctrl+k -Function ForwardDeleteLine
+    Set-PSReadLineKeyHandler -Key Ctrl+a -Function BeginningOfLine
+    Set-PSReadLineKeyHandler -Key Ctrl+e -Function EndOfLine
+}
+
+# ============================================================================
 # 提示符美化 - Starship
 # ============================================================================
 
