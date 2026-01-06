@@ -166,6 +166,16 @@ if (Get-Module -ListAvailable -Name PSReadLine) {
 Invoke-Expression (&starship init powershell)
 
 # ============================================================================
+# Zoxide - 智能目录跳转 (类似 z/autojump)
+# 安装: winget install ajeetdsouza.zoxide
+# 使用: z <目录关键词> 快速跳转
+# ============================================================================
+
+if (Get-Command zoxide -ErrorAction SilentlyContinue) {
+    Invoke-Expression (& { (zoxide init powershell | Out-String) })
+}
+
+# ============================================================================
 # 安装说明
 # ============================================================================
 # 1. 查看 profile 路径: echo $PROFILE
