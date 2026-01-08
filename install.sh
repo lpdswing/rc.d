@@ -68,6 +68,61 @@ function install_starship() {
     print_success "Starship 安装完成"
 }
 
+# 安装 fnm (Fast Node Manager)
+function install_fnm() {
+    print_info "安装 fnm..."
+
+    if command -v fnm &>/dev/null; then
+        print_success "fnm 已安装"
+        return 0
+    fi
+
+    if [[ $(uname) == 'Darwin' ]]; then
+        brew install fnm
+    else
+        curl -fsSL https://fnm.vercel.app/install | bash -s -- --skip-shell
+    fi
+
+    print_success "fnm 安装完成"
+}
+
+# 安装 uv (Python 包管理器)
+function install_uv() {
+    print_info "安装 uv..."
+
+    if command -v uv &>/dev/null; then
+        print_success "uv 已安装"
+        return 0
+    fi
+
+    if [[ $(uname) == 'Darwin' ]]; then
+        brew install uv
+    else
+        curl -LsSf https://astral.sh/uv/install.sh | sh
+    fi
+
+    print_success "uv 安装完成"
+}
+
+# 安装 fzf (模糊查找)
+function install_fzf() {
+    print_info "安装 fzf..."
+
+    if command -v fzf &>/dev/null; then
+        print_success "fzf 已安装"
+        return 0
+    fi
+
+    if [[ $(uname) == 'Darwin' ]]; then
+        brew install fzf
+        $(brew --prefix)/opt/fzf/install --key-bindings --completion --no-update-rc --no-bash --no-fish
+    else
+        sudo apt-get update && sudo apt-get install -y fzf
+    fi
+
+    print_success "fzf 安装完成"
+}
+
 # 配置环境（链接配置文件）
 function setup_env() {
     print_info "配置环境..."
@@ -112,6 +167,9 @@ function install_all() {
     fi
 
     install_starship
+    install_fnm
+    install_uv
+    install_fzf
     setup_env
 
     print_success "安装完成！"
@@ -131,8 +189,11 @@ RC.D 配置安装脚本
 【 1 】 一键安装（推荐）
 【 2 】 安装 Homebrew (macOS)
 【 3 】 安装 Starship
-【 4 】 配置环境（链接配置文件）
-【 5 】 配置 pip 镜像源
+【 4 】 安装 fnm
+【 5 】 安装 uv
+【 6 】 安装 fzf
+【 7 】 配置环境（链接配置文件）
+【 8 】 配置 pip 镜像源
 【 0 】 退出
 ================================
 EOF
@@ -150,7 +211,10 @@ case $choice in
     1) install_all;;
     2) install_brew;;
     3) install_starship;;
-    4) setup_env;;
-    5) pip_config;;
+    4) install_fnm;;
+    5) install_uv;;
+    6) install_fzf;;
+    7) setup_env;;
+    8) pip_config;;
     0|*) echo "退出" && exit;;
 esac
