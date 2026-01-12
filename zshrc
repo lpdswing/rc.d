@@ -144,7 +144,11 @@ eval "$(starship init zsh)"
 # ============================================================================
 # fnm - Node.js 版本管理
 # ============================================================================
-
+FNM_PATH="/home/lpdswing/.local/share/fnm"
+if [ -d "$FNM_PATH" ]; then
+  export PATH="$FNM_PATH:$PATH"
+  eval "`fnm env`"
+fi
 eval "$(fnm env --use-on-cd --shell zsh)"
 eval "$(fnm completions --shell zsh)"
 
