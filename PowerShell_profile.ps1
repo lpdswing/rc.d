@@ -90,6 +90,12 @@ if (Get-Command go -ErrorAction SilentlyContinue) {
     $env:GOPROXY = "https://goproxy.cn"
 }
 
+# Node.js - fnm (Fast Node Manager)
+if (Get-Command fnm -ErrorAction SilentlyContinue) {
+    fnm env --use-on-cd | Out-String | Invoke-Expression
+    fnm completions --shell powershell | Out-String | Invoke-Expression
+}
+
 # pnpm
 $pnpmPath = "$env:USERPROFILE\.local\share\pnpm"
 if (Test-Path $pnpmPath) {
