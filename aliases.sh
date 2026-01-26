@@ -68,7 +68,13 @@ alias httpserver='python -m http.server'
 alias pip-search='pip_search'
 alias rmpyc='find . | grep -wE "py[co]|__pycache__" | xargs rm -rvf'
 alias pygrep='grep --include="*.py"'
-# alias pip='uv pip'
+
+# uv - pip
+if command -v uv >/dev/null 2>&1; then
+    alias pip='uv pip'
+    alias pip3='uv pip'
+fi
+
 alias venv='uv venv'
 alias upy='uv python'
 
