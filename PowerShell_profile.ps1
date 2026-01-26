@@ -57,7 +57,7 @@ function rmpyc { Get-ChildItem -Recurse -Include "*.pyc","*.pyo","__pycache__" |
 function pygrep { Select-String -Path "*.py" -Pattern @args }
 
 # uv 相关
-function pip { uv pip @args }
+# function pip { uv pip @args }
 function venv { uv venv @args }
 function upy { uv python @args }
 
