@@ -142,15 +142,11 @@ setopt glob_dots
 eval "$(starship init zsh)"
 
 # ============================================================================
-# fnm - Node.js 版本管理
+# nvm - Node.js 版本管理
 # ============================================================================
-FNM_PATH="/home/lpdswing/.local/share/fnm"
-if [ -d "$FNM_PATH" ]; then
-  export PATH="$FNM_PATH:$PATH"
-  eval "`fnm env`"
-fi
-eval "$(fnm env --use-on-cd --shell zsh)"
-eval "$(fnm completions --shell zsh)"
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # 加载 nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # 加载 nvm 补全
 
 # ============================================================================
 # 加载自定义配置
@@ -167,8 +163,3 @@ eval "$(fnm completions --shell zsh)"
 eval "$(uv generate-shell-completion zsh)"
 eval "$(uvx --generate-shell-completion zsh)"
 
-# ============================================================================
-# Kiro - AI IDE 集成
-# ============================================================================
-
-[[ "$TERM_PROGRAM" == "kiro" ]] && . "$(kiro --locate-shell-integration-path zsh)"

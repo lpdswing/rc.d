@@ -68,22 +68,22 @@ function install_starship() {
     print_success "Starship 安装完成"
 }
 
-# 安装 fnm (Fast Node Manager)
-function install_fnm() {
-    print_info "安装 fnm..."
+# 安装 nvm (Node Version Manager)
+function install_nvm() {
+    print_info "安装 nvm..."
 
-    if command -v fnm &>/dev/null; then
-        print_success "fnm 已安装"
+    if [ -d "$HOME/.nvm" ]; then
+        print_success "nvm 已安装"
         return 0
     fi
 
     if [[ $(uname) == 'Darwin' ]]; then
-        brew install fnm
+        brew install nvm
     else
-        curl -fsSL https://fnm.vercel.app/install | bash -s -- --skip-shell
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
     fi
 
-    print_success "fnm 安装完成"
+    print_success "nvm 安装完成"
 }
 
 # 安装 uv (Python 包管理器)
@@ -167,7 +167,7 @@ function install_all() {
     fi
 
     install_starship
-    install_fnm
+    install_nvm
     install_uv
     install_fzf
     setup_env
@@ -189,7 +189,7 @@ RC.D 配置安装脚本
 【 1 】 一键安装（推荐）
 【 2 】 安装 Homebrew (macOS)
 【 3 】 安装 Starship
-【 4 】 安装 fnm
+【 4 】 安装 nvm
 【 5 】 安装 uv
 【 6 】 安装 fzf
 【 7 】 配置环境（链接配置文件）
@@ -211,7 +211,7 @@ case $choice in
     1) install_all;;
     2) install_brew;;
     3) install_starship;;
-    4) install_fnm;;
+    4) install_nvm;;
     5) install_uv;;
     6) install_fzf;;
     7) setup_env;;
