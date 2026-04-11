@@ -77,11 +77,7 @@ function install_nvm() {
         return 0
     fi
 
-    if [[ $(uname) == 'Darwin' ]]; then
-        brew install nvm
-    else
-        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
-    fi
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
 
     print_success "nvm 安装完成"
 }
