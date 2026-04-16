@@ -1,0 +1,9 @@
+# Ghostty 配置文件 (macOS)
+# https://ghostty.org/docs/config
+
+# === 基础配置 ===
+font-size = 14
+font-family = "JetBrains Mono"
+
+# === 主题 ===
+theme = github-dark-dimmed

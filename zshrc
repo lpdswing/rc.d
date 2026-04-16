@@ -1,68 +1,42 @@
 # ============================================================================
-# Fish-like Zsh 配置 - Oh My Zsh 版本
+# Zsh 配置 - Sheldon 插件管理
 # ============================================================================
 
-# Oh My Zsh 安装路径
-export ZSH="${HOME}/.oh-my-zsh"
+# ============================================================================
+# 早期 PATH 设置（确保 sheldon 等工具可用）
+# ============================================================================
 
-# 自动安装 Oh My Zsh（不覆盖 zshrc）
-if [[ ! -d "$ZSH" ]]; then
-    print -P "%F{yellow}→ 安装 Oh My Zsh...%f"
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended --keep-zshrc
+[[ ! ":${PATH}:" =~ "/usr/local/sbin" ]] && export PATH="/usr/local/sbin:$PATH"
+[[ ! ":${PATH}:" =~ "$HOME/.local/bin" ]] && export PATH="$HOME/.local/bin:$PATH"
+[[ ! ":${PATH}:" =~ "$HOME/.local/utils" ]] && export PATH="$HOME/.local/utils:$PATH"
+[[ ! ":${PATH}:" =~ "$HOME/.cargo/bin" ]] && export PATH="$HOME/.cargo/bin:$PATH"
+
+# ============================================================================
+# 补全系统初始化（带缓存，每天只重建一次）
+# ============================================================================
+
+autoload -Uz compinit
+if [[ -n ${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+24) ]]; then
+    compinit
+else
+    compinit -C
 fi
 
 # ============================================================================
-# 主题 - 禁用 OMZ 主题，使用 Starship
+# Sheldon 插件管理
 # ============================================================================
 
-ZSH_THEME=""
+if command -v sheldon &>/dev/null; then
+    eval "$(sheldon source)"
+else
+    print -P "%F{yellow}→ sheldon 未安装，请运行: cargo install sheldon 或 brew install sheldon%f"
+fi
 
 # ============================================================================
-# 插件
+# command-not-found（系统级）
 # ============================================================================
 
-# 自动安装第三方插件
-ZSH_CUSTOM="${ZSH_CUSTOM:-$ZSH/custom}"
-
-# zsh-autosuggestions
-if [[ ! -d "$ZSH_CUSTOM/plugins/zsh-autosuggestions" ]]; then
-    git clone https://github.com/zsh-users/zsh-autosuggestions "$ZSH_CUSTOM/plugins/zsh-autosuggestions"
-fi
-
-# zsh-syntax-highlighting
-if [[ ! -d "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting" ]]; then
-    git clone https://github.com/zsh-users/zsh-syntax-highlighting "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting"
-fi
-
-# zsh-history-substring-search
-if [[ ! -d "$ZSH_CUSTOM/plugins/zsh-history-substring-search" ]]; then
-    git clone https://github.com/zsh-users/zsh-history-substring-search "$ZSH_CUSTOM/plugins/zsh-history-substring-search"
-fi
-
-# zsh-autopair
-if [[ ! -d "$ZSH_CUSTOM/plugins/zsh-autopair" ]]; then
-    git clone https://github.com/hlissner/zsh-autopair "$ZSH_CUSTOM/plugins/zsh-autopair"
-fi
-
-# fzf-tab
-if [[ ! -d "$ZSH_CUSTOM/plugins/fzf-tab" ]]; then
-    git clone https://github.com/Aloxaf/fzf-tab "$ZSH_CUSTOM/plugins/fzf-tab"
-fi
-
-plugins=(
-    z                           # 快速目录跳转
-    colored-man-pages           # 彩色 man 手册
-    command-not-found           # 命令未找到时建议安装
-    fzf                         # fzf 集成
-    fzf-tab                     # fzf 补全增强（在 fzf 之后）
-    zsh-autosuggestions         # 命令自动建议
-    zsh-autopair                # 括号自动配对
-    zsh-history-substring-search # 历史子串搜索
-    zsh-syntax-highlighting     # 语法高亮（必须放最后）
-)
-
-# 加载 Oh My Zsh
-source "$ZSH/oh-my-zsh.sh"
+[[ -f /etc/zsh_command_not_found ]] && source /etc/zsh_command_not_found
 
 # ============================================================================
 # 历史记录配置
@@ -70,10 +44,12 @@ source "$ZSH/oh-my-zsh.sh"
 
 HISTSIZE=50000
 SAVEHIST=50000
+HISTFILE="${HISTFILE:-$HOME/.zsh_history}"
 setopt hist_ignore_all_dups   # 删除旧的重复命令
 setopt hist_find_no_dups      # 搜索时不显示重复
 setopt hist_reduce_blanks     # 删除多余空格
 setopt hist_verify            # 展开历史命令后先确认
+setopt share_history          # 多终端共享历史
 
 # ============================================================================
 # 补全样式 - Fish 风格
@@ -106,6 +82,8 @@ bindkey '^f' autosuggest-accept
 # ============================================================================
 
 if command -v fzf &>/dev/null; then
+    eval "$(fzf --zsh)"
+
     export FZF_DEFAULT_OPTS='--height=40% --layout=reverse --border --info=inline'
 
     if command -v fd &>/dev/null; then
@@ -142,6 +120,12 @@ setopt glob_dots
 eval "$(starship init zsh)"
 
 # ============================================================================
+# zoxide - 快速目录跳转
+# ============================================================================
+
+eval "$(zoxide init zsh)"
+
+# ============================================================================
 # nvm - Node.js 版本管理
 # ============================================================================
 export NVM_DIR="$HOME/.nvm"
@@ -163,3 +147,5 @@ export NVM_DIR="$HOME/.nvm"
 eval "$(uv generate-shell-completion zsh)"
 eval "$(uvx --generate-shell-completion zsh)"
 
+# OpenClaw Completion
+source "/home/lpdswing/.openclaw/completions/openclaw.zsh"

@@ -1,0 +1,18 @@
+shell = "zsh"
+
+
+[plugins.zsh-autosuggestions]
+github = "zsh-users/zsh-autosuggestions"
+
+[plugins.zsh-autopair]
+github = "hlissner/zsh-autopair"
+
+[plugins.zsh-history-substring-search]
+github = "zsh-users/zsh-history-substring-search"
+
+[plugins.fzf-tab]
+github = "Aloxaf/fzf-tab"
+
+# zsh-syntax-highlighting 必须放最后
+[plugins.zsh-syntax-highlighting]
+github = "zsh-users/zsh-syntax-highlighting"

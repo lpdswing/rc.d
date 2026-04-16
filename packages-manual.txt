@@ -1,0 +1,6 @@
+# 手动安装的软件
+# 这些需要从官网下载或应用商店安装
+
+fdm                 # Free Download Manager  https://www.freedownloadmanager.org
+obs                 # OBS Studio             https://obsproject.com
+localsend           # LocalSend              https://localsend.org

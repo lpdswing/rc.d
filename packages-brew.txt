@@ -1,0 +1,12 @@
+# Homebrew packages (macOS)
+# 每行一个包名，# 开头为注释
+
+# 终端工具
+fzf
+fd
+bat
+ripgrep
+htop
+tree
+jq
+tmux

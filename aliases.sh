@@ -7,11 +7,6 @@ export LC_ALL="zh_CN.UTF-8"
 # export LESS='-NRF'
 # export LESSOPEN='| pygmentize -g -O style=native %s'
 
-# PATH 设置（避免重复添加）
-[[ ! ":${PATH}:" =~ "/usr/local/sbin" ]] && export PATH="/usr/local/sbin:$PATH"
-[[ ! ":${PATH}:" =~ "$HOME/.local/bin" ]] && export PATH="$HOME/.local/bin:$PATH"
-[[ ! ":${PATH}:" =~ "$HOME/.local/utils" ]] && export PATH="$HOME/.local/utils:$PATH"
-
 # ============================================================================
 # 通用别名
 # ============================================================================

@@ -86,6 +86,30 @@ function install_nvm() {
     print_success "nvm 安装完成"
 }
 
+# 安装 sheldon (Zsh 插件管理器)
+function install_sheldon() {
+    print_info "安装 sheldon..."
+
+    if command -v sheldon &>/dev/null; then
+        print_success "sheldon 已安装"
+        return 0
+    fi
+
+    if [[ $(uname) == 'Darwin' ]]; then
+        brew install sheldon
+    elif command -v cargo &>/dev/null; then
+        cargo install sheldon
+    elif command -v curl &>/dev/null; then
+        curl --proto '=https' -fLsS https://rossmacarthur.github.io/install/crate.sh \
+            | bash -s -- --repo rossmacarthur/sheldon --to ~/.local/bin
+    else
+        echo "请手动安装 sheldon: https://github.com/rossmacarthur/sheldon"
+        return 1
+    fi
+
+    print_success "sheldon 安装完成"
+}
+
 # 安装 uv (Python 包管理器)
 function install_uv() {
     print_info "安装 uv..."
@@ -104,23 +128,44 @@ function install_uv() {
     print_success "uv 安装完成"
 }
 
-# 安装 fzf (模糊查找)
-function install_fzf() {
-    print_info "安装 fzf..."
+# 从 txt 文件批量安装包
+function install_packages() {
+    print_info "安装常用软件包..."
 
-    if command -v fzf &>/dev/null; then
-        print_success "fzf 已安装"
+    local pkg_file
+    if [[ $(uname) == 'Darwin' ]]; then
+        pkg_file="$RC_DIR/packages-brew.txt"
+    else
+        pkg_file="$RC_DIR/packages-apt.txt"
+    fi
+
+    if [[ ! -f "$pkg_file" ]]; then
+        echo "未找到包列表: $pkg_file"
+        return 1
+    fi
+
+    # 读取包列表（跳过注释和空行）
+    local packages=()
+    while IFS= read -r line; do
+        line="${line%%#*}"          # 去掉行内注释
+        line="$(echo "$line" | xargs)"  # 去掉首尾空格
+        [[ -n "$line" ]] && packages+=("$line")
+    done < "$pkg_file"
+
+    if [[ ${#packages[@]} -eq 0 ]]; then
+        echo "包列表为空"
         return 0
     fi
 
     if [[ $(uname) == 'Darwin' ]]; then
-        brew install fzf
-        $(brew --prefix)/opt/fzf/install --key-bindings --completion --no-update-rc --no-bash --no-fish
+        print_info "使用 Homebrew 安装: ${packages[*]}"
+        brew install "${packages[@]}"
     else
-        sudo apt-get update && sudo apt-get install -y fzf
+        print_info "使用 apt 安装: ${packages[*]}"
+        sudo apt-get update && sudo apt-get install -y "${packages[@]}"
     fi
 
-    print_success "fzf 安装完成"
+    print_success "软件包安装完成"
 }
 
 # 配置环境（链接配置文件）
@@ -137,6 +182,19 @@ function setup_env() {
     ln -sfv .rc.d/zshrc .zshrc
     ln -sfv .rc.d/bashrc .bashrc
     ln -sfv .rc.d/tmux.conf .tmux.conf
+
+    # ~/.config 下的配置
+    ln -sfnv "$RC_DIR/config/sheldon" "$HOME/.config/sheldon"
+    ln -sfnv "$RC_DIR/config/kitty" "$HOME/.config/kitty"
+    ln -sf "$RC_DIR/config/starship.toml" "$HOME/.config/starship.toml"
+
+    # Ghostty 配置（按平台链接）
+    mkdir -p "$HOME/.config/ghostty"
+    if [[ $(uname) == 'Darwin' ]]; then
+        ln -sfv "$RC_DIR/config/ghostty/config-macos.ghostty" "$HOME/.config/ghostty/config"
+    else
+        ln -sfv "$RC_DIR/config/ghostty/config-linux.ghostty" "$HOME/.config/ghostty/config"
+    fi
 
     # 创建本地配置文件
     touch "$HOME/.zshrc.local"
@@ -166,10 +224,11 @@ function install_all() {
         install_brew
     fi
 
+    install_packages
     install_starship
+    install_sheldon
     install_nvm
     install_uv
-    install_fzf
     setup_env
 
     print_success "安装完成！"
@@ -177,7 +236,7 @@ function install_all() {
     echo "请执行以下命令重新加载配置："
     echo "  source ~/.zshrc"
     echo ""
-    echo "提示：Zinit 将在首次启动 Zsh 时自动安装"
+    echo "提示：Sheldon 将在首次启动 Zsh 时自动下载插件"
 }
 
 # 显示菜单
@@ -188,12 +247,13 @@ RC.D 配置安装脚本
 ================================
 【 1 】 一键安装（推荐）
 【 2 】 安装 Homebrew (macOS)
-【 3 】 安装 Starship
-【 4 】 安装 nvm
-【 5 】 安装 uv
-【 6 】 安装 fzf
-【 7 】 配置环境（链接配置文件）
-【 8 】 配置 pip 镜像源
+【 3 】 安装常用软件包
+【 4 】 安装 Starship
+【 5 】 安装 sheldon
+【 6 】 安装 nvm
+【 7 】 安装 uv
+【 8 】 配置环境（链接配置文件）
+【 9 】 配置 pip 镜像源
 【 0 】 退出
 ================================
 EOF
@@ -210,11 +270,12 @@ fi
 case $choice in
     1) install_all;;
     2) install_brew;;
-    3) install_starship;;
-    4) install_nvm;;
-    5) install_uv;;
-    6) install_fzf;;
-    7) setup_env;;
-    8) pip_config;;
+    3) install_packages;;
+    4) install_starship;;
+    5) install_sheldon;;
+    6) install_nvm;;
+    7) install_uv;;
+    8) setup_env;;
+    9) pip_config;;
     0|*) echo "退出" && exit;;
 esac
