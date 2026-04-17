@@ -3,6 +3,8 @@
 
 # === 基础配置 ===
 font-family = "Maple Mono NF CN"
+background-opacity = 0.8
+theme = iTerm2 Default
 
 # === 分屏 ===
 keybind = alt+d=new_split:right
