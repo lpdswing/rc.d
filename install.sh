@@ -181,7 +181,8 @@ function setup_env() {
 
     # ~/.config 下的配置
     ln -sfnv "$RC_DIR/config/sheldon" "$HOME/.config/sheldon"
-    ln -sfnv "$RC_DIR/config/kitty" "$HOME/.config/kitty"
+    mkdir -p "$HOME/.config/kitty"
+    ln -sfv "$RC_DIR/config/kitty/kitty.conf" "$HOME/.config/kitty/kitty.conf"
     ln -sf "$RC_DIR/config/starship.toml" "$HOME/.config/starship.toml"
 
     # Ghostty 配置（按平台链接）

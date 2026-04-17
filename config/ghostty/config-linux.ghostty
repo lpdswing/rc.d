@@ -25,3 +25,8 @@ keybind = alt+shift+right=resize_split:right,10
 # === 均分 / 关闭 ===
 keybind = alt+e=equalize_splits
 keybind = alt+w=close_surface
+
+# === 剪贴板 ===
+copy-on-select = clipboard
+keybind = performable:ctrl+c=copy_to_clipboard
+keybind = ctrl+v=paste_from_clipboard
