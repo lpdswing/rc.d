@@ -199,18 +199,28 @@ function setup_env() {
     print_success "环境配置完成"
 }
 
-# 配置 pip 镜像源
-function pip_config() {
-    print_info "配置 pip 镜像源..."
+# 配置 pip / uv 镜像源
+function mirror_config() {
+    print_info "配置 pip / uv 镜像源..."
 
-    if ! command -v pip &>/dev/null && ! command -v pip3 &>/dev/null; then
-        echo "未找到 pip"
-        return 1
+    local mirror="https://pypi.tuna.tsinghua.edu.cn/simple"
+
+    # pip
+    if command -v pip &>/dev/null || command -v pip3 &>/dev/null; then
+        pip config set global.index-url "$mirror"
+        print_success "pip 镜像源配置完成"
     fi
 
-    pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
-
-    print_success "pip 镜像源配置完成"
+    # uv
+    local uv_dir="$HOME/.config/uv"
+    local uv_conf="$uv_dir/uv.toml"
+    mkdir -p "$uv_dir"
+    cat > "$uv_conf" <<EOF
+[[index]]
+url = "$mirror"
+default = true
+EOF
+    print_success "uv 镜像源已写入 $uv_conf"
 }
 
 # 一键安装
@@ -250,7 +260,7 @@ RC.D 配置安装脚本
 【 6 】 安装 nvm
 【 7 】 安装 uv
 【 8 】 配置环境（链接配置文件）
-【 9 】 配置 pip 镜像源
+【 9 】 配置 pip / uv 镜像源
 【 0 】 退出
 ================================
 EOF
@@ -273,6 +283,6 @@ case $choice in
     6) install_nvm;;
     7) install_uv;;
     8) setup_env;;
-    9) pip_config;;
+    9) mirror_config;;
     0|*) echo "退出" && exit;;
 esac

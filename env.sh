@@ -2,7 +2,12 @@
 # 环境变量 & PATH 配置
 # ============================================================================
 
-export GREP_COLORS='mt=1;31'
+# 基础 PATH（bash/zsh 共享，须在插件管理器之前加载）
+[[ ! ":${PATH}:" =~ ":/usr/local/sbin:" ]] && export PATH="/usr/local/sbin:$PATH"
+[[ ! ":${PATH}:" =~ ":$HOME/.local/bin:" ]] && export PATH="$HOME/.local/bin:$PATH"
+[[ ! ":${PATH}:" =~ ":$HOME/.local/utils:" ]] && export PATH="$HOME/.local/utils:$PATH"
+[[ ! ":${PATH}:" =~ ":$HOME/.cargo/bin:" ]] && export PATH="$HOME/.cargo/bin:$PATH"
+
 export LC_ALL="zh_CN.UTF-8"
 # export LESS='-NRF'
 # export LESSOPEN='| pygmentize -g -O style=native %s'

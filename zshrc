@@ -3,13 +3,10 @@
 # ============================================================================
 
 # ============================================================================
-# 早期 PATH 设置（确保 sheldon 等工具可用）
+# 早期加载环境变量（PATH 等，sheldon/compinit 依赖）
 # ============================================================================
 
-[[ ! ":${PATH}:" =~ "/usr/local/sbin" ]] && export PATH="/usr/local/sbin:$PATH"
-[[ ! ":${PATH}:" =~ "$HOME/.local/bin" ]] && export PATH="$HOME/.local/bin:$PATH"
-[[ ! ":${PATH}:" =~ "$HOME/.local/utils" ]] && export PATH="$HOME/.local/utils:$PATH"
-[[ ! ":${PATH}:" =~ "$HOME/.cargo/bin" ]] && export PATH="$HOME/.cargo/bin:$PATH"
+[[ -f "$HOME/.rc.d/env.sh" ]] && source "$HOME/.rc.d/env.sh"
 
 # ============================================================================
 # 补全系统初始化（带缓存，每天只重建一次）
@@ -136,7 +133,6 @@ export NVM_DIR="$HOME/.nvm"
 # 加载自定义配置
 # ============================================================================
 
-[[ -f "$HOME/.rc.d/env.sh" ]] && source "$HOME/.rc.d/env.sh"
 [[ -f "$HOME/.rc.d/aliases.sh" ]] && source "$HOME/.rc.d/aliases.sh"
 [[ -f "$HOME/.rc.d/functions.sh" ]] && source "$HOME/.rc.d/functions.sh"
 [[ -f "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"
@@ -149,4 +145,4 @@ eval "$(uv generate-shell-completion zsh)"
 eval "$(uvx --generate-shell-completion zsh)"
 
 # OpenClaw Completion
-source "/home/lpdswing/.openclaw/completions/openclaw.zsh"  
+[[ -f "$HOME/.openclaw/completions/openclaw.zsh" ]] && source "$HOME/.openclaw/completions/openclaw.zsh"
