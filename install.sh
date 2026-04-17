@@ -68,18 +68,27 @@ function install_starship() {
     print_success "Starship 安装完成"
 }
 
-# 安装 nvm (Node Version Manager)
-function install_nvm() {
-    print_info "安装 nvm..."
+# 安装 fnm (Fast Node Manager)
+function install_fnm() {
+    print_info "安装 fnm..."
 
-    if [ -d "$HOME/.nvm" ]; then
-        print_success "nvm 已安装"
+    if command -v fnm &>/dev/null; then
+        print_success "fnm 已安装"
         return 0
     fi
 
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+    if [[ $(uname) == 'Darwin' ]]; then
+        brew install fnm
+    elif command -v cargo &>/dev/null; then
+        cargo install fnm
+    elif command -v curl &>/dev/null; then
+        curl -fsSL https://fnm.vercel.app/install | bash -s -- --skip-shell
+    else
+        echo "请手动安装 fnm: https://github.com/Schniz/fnm"
+        return 1
+    fi
 
-    print_success "nvm 安装完成"
+    print_success "fnm 安装完成"
 }
 
 # 安装 sheldon (Zsh 插件管理器)
@@ -234,7 +243,7 @@ function install_all() {
     install_packages
     install_starship
     install_sheldon
-    install_nvm
+    install_fnm
     install_uv
     setup_env
 
@@ -257,7 +266,7 @@ RC.D 配置安装脚本
 【 3 】 安装常用软件包
 【 4 】 安装 Starship
 【 5 】 安装 sheldon
-【 6 】 安装 nvm
+【 6 】 安装 fnm
 【 7 】 安装 uv
 【 8 】 配置环境（链接配置文件）
 【 9 】 配置 pip / uv 镜像源
@@ -280,7 +289,7 @@ case $choice in
     3) install_packages;;
     4) install_starship;;
     5) install_sheldon;;
-    6) install_nvm;;
+    6) install_fnm;;
     7) install_uv;;
     8) setup_env;;
     9) mirror_config;;

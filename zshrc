@@ -123,11 +123,11 @@ eval "$(starship init zsh)"
 eval "$(zoxide init zsh)"
 
 # ============================================================================
-# nvm - Node.js 版本管理
+# fnm - Node.js 版本管理（Rust 实现，启动快）
 # ============================================================================
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # 加载 nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # 加载 nvm 补全
+if command -v fnm &>/dev/null; then
+    eval "$(fnm env --use-on-cd --shell zsh)"
+fi
 
 # ============================================================================
 # 加载自定义配置
