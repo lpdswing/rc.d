@@ -13,26 +13,6 @@ else
 fi
 
 # ============================================================================
-# 颜色支持
-# ============================================================================
-
-if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-    alias ls='ls --color=auto'
-    alias dir='dir --color=auto'
-    alias vdir='vdir --color=auto'
-
-    alias grep='grep --color=auto'
-    alias fgrep='fgrep --color=auto'
-    alias egrep='egrep --color=auto'
-fi
-
-# macOS ls 颜色
-if [ `uname` = "Darwin" ]; then
-    alias ls='ls -G'
-fi
-
-# ============================================================================
 # 历史记录配置
 # ============================================================================
 
@@ -42,6 +22,7 @@ export HISTTIMEFORMAT="[%y-%m-%d_%T]  "
 # 加载自定义配置
 # ============================================================================
 
+[[ -f "$HOME/.rc.d/env.sh" ]] && source "$HOME/.rc.d/env.sh"
 [[ -f "$HOME/.rc.d/aliases.sh" ]] && source "$HOME/.rc.d/aliases.sh"
 [[ -f "$HOME/.rc.d/functions.sh" ]] && source "$HOME/.rc.d/functions.sh"
 
@@ -50,9 +31,3 @@ export HISTTIMEFORMAT="[%y-%m-%d_%T]  "
 # ============================================================================
 
 [[ -f ~/.fzf.bash ]] && source ~/.fzf.bash
-
-# ============================================================================
-# Kiro - AI IDE 集成
-# ============================================================================
-
-[[ "$TERM_PROGRAM" == "kiro" ]] && . "$(kiro --locate-shell-integration-path bash)"

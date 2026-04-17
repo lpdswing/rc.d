@@ -6,7 +6,7 @@ fzf
 fd
 bat
 ripgrep
+eza
 htop
-tree
 jq
 tmux

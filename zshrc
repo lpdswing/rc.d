@@ -136,6 +136,7 @@ export NVM_DIR="$HOME/.nvm"
 # 加载自定义配置
 # ============================================================================
 
+[[ -f "$HOME/.rc.d/env.sh" ]] && source "$HOME/.rc.d/env.sh"
 [[ -f "$HOME/.rc.d/aliases.sh" ]] && source "$HOME/.rc.d/aliases.sh"
 [[ -f "$HOME/.rc.d/functions.sh" ]] && source "$HOME/.rc.d/functions.sh"
 [[ -f "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"
@@ -148,4 +149,4 @@ eval "$(uv generate-shell-completion zsh)"
 eval "$(uvx --generate-shell-completion zsh)"
 
 # OpenClaw Completion
-source "/home/lpdswing/.openclaw/completions/openclaw.zsh"
+source "/home/lpdswing/.openclaw/completions/openclaw.zsh"  
