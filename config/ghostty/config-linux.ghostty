@@ -3,8 +3,9 @@
 
 # === 基础配置 ===
 font-family = "Maple Mono NF CN"
-background-opacity = 0.8
-theme = Atom One Dark
+background-opacity = 0.85
+bold-is-bright = true
+theme = iTerm2 Smoooooth
 
 # === 分屏 ===
 keybind = alt+d=new_split:right
