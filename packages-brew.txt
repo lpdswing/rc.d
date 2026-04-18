@@ -10,3 +10,4 @@ eza
 htop
 jq
 tmux
+zoxide

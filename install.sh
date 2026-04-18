@@ -133,6 +133,27 @@ function install_uv() {
     print_success "uv 安装完成"
 }
 
+# 安装 zoxide (快速目录跳转)
+function install_zoxide() {
+    print_info "安装 zoxide..."
+
+    if command -v zoxide &>/dev/null; then
+        print_success "zoxide 已安装"
+        return 0
+    fi
+
+    if [[ $(uname) == 'Darwin' ]]; then
+        brew install zoxide
+    elif command -v curl &>/dev/null; then
+        curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
+    else
+        echo "请手动安装 zoxide: https://github.com/ajeetdsouza/zoxide"
+        return 1
+    fi
+
+    print_success "zoxide 安装完成"
+}
+
 # 从 txt 文件批量安装包
 function install_packages() {
     print_info "安装常用软件包..."
@@ -245,6 +266,7 @@ function install_all() {
     install_sheldon
     install_fnm
     install_uv
+    install_zoxide
     setup_env
 
     print_success "安装完成！"
@@ -270,6 +292,7 @@ RC.D 配置安装脚本
 【 7 】 安装 uv
 【 8 】 配置环境（链接配置文件）
 【 9 】 配置 pip / uv 镜像源
+【 a 】 安装 zoxide
 【 0 】 退出
 ================================
 EOF
@@ -293,5 +316,6 @@ case $choice in
     7) install_uv;;
     8) setup_env;;
     9) mirror_config;;
+    a|A) install_zoxide;;
     0|*) echo "退出" && exit;;
 esac

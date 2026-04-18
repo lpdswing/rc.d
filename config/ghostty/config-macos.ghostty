@@ -3,3 +3,6 @@
 
 # === 基础配置 ===
 font-family = "Maple Mono NF CN"
+background-opacity = 0.85
+bold-is-bright = true
+theme = iTerm2 Smoooooth
