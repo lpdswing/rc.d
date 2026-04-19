@@ -4,3 +4,4 @@
 fdm                 # Free Download Manager  https://www.freedownloadmanager.org
 obs                 # OBS Studio             https://obsproject.com
 localsend           # LocalSend              https://localsend.org
+claude-hud          # claude code插件         https://github.com/jarrodwatts/claude-hud

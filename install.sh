@@ -154,6 +154,76 @@ function install_zoxide() {
     print_success "zoxide 安装完成"
 }
 
+# 安装 zellij (终端多路复用器)
+function install_zellij() {
+    print_info "安装 zellij..."
+
+    if command -v zellij &>/dev/null; then
+        print_success "zellij 已安装"
+        return 0
+    fi
+
+    if [[ $(uname) == 'Darwin' ]]; then
+        brew install zellij
+    elif command -v cargo &>/dev/null; then
+        cargo install --locked zellij
+    elif command -v curl &>/dev/null; then
+        local arch
+        arch=$(uname -m)
+        case "$arch" in
+            x86_64) arch="x86_64-unknown-linux-musl" ;;
+            aarch64|arm64) arch="aarch64-unknown-linux-musl" ;;
+            *) echo "不支持的架构: $arch"; return 1 ;;
+        esac
+        local tmp
+        tmp=$(mktemp -d)
+        curl -fsSL "https://github.com/zellij-org/zellij/releases/latest/download/zellij-${arch}.tar.gz" \
+            | tar -xz -C "$tmp"
+        mkdir -p "$HOME/.local/bin"
+        mv "$tmp/zellij" "$HOME/.local/bin/"
+        rm -rf "$tmp"
+    else
+        echo "请手动安装 zellij: https://zellij.dev/documentation/installation"
+        return 1
+    fi
+
+    print_success "zellij 安装完成"
+}
+
+# 安装 jd (JSON diff 工具)
+function install_jd() {
+    print_info "安装 jd..."
+
+    if command -v jd &>/dev/null; then
+        print_success "jd 已安装"
+        return 0
+    fi
+
+    if [[ $(uname) == 'Darwin' ]]; then
+        brew install jd
+    elif command -v go &>/dev/null; then
+        go install github.com/josephburnett/jd/v2@latest
+    elif command -v curl &>/dev/null; then
+        local arch os
+        os=$(uname -s | tr '[:upper:]' '[:lower:]')
+        arch=$(uname -m)
+        case "$arch" in
+            x86_64) arch="amd64" ;;
+            aarch64|arm64) arch="arm64" ;;
+            *) echo "不支持的架构: $arch"; return 1 ;;
+        esac
+        mkdir -p "$HOME/.local/bin"
+        curl -fsSL -o "$HOME/.local/bin/jd" \
+            "https://github.com/josephburnett/jd/releases/latest/download/jd-${os}-${arch}"
+        chmod +x "$HOME/.local/bin/jd"
+    else
+        echo "请手动安装 jd: https://github.com/josephburnett/jd"
+        return 1
+    fi
+
+    print_success "jd 安装完成"
+}
+
 # 从 txt 文件批量安装包
 function install_packages() {
     print_info "安装常用软件包..."
@@ -267,6 +337,8 @@ function install_all() {
     install_fnm
     install_uv
     install_zoxide
+    install_zellij
+    install_jd
     setup_env
 
     print_success "安装完成！"
@@ -293,6 +365,8 @@ RC.D 配置安装脚本
 【 8 】 配置环境（链接配置文件）
 【 9 】 配置 pip / uv 镜像源
 【 a 】 安装 zoxide
+【 b 】 安装 zellij
+【 c 】 安装 jd
 【 0 】 退出
 ================================
 EOF
@@ -317,5 +391,7 @@ case $choice in
     8) setup_env;;
     9) mirror_config;;
     a|A) install_zoxide;;
+    b|B) install_zellij;;
+    c|C) install_jd;;
     0|*) echo "退出" && exit;;
 esac

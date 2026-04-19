@@ -9,5 +9,7 @@ ripgrep
 eza
 htop
 jq
+jd
 tmux
 zoxide
+zellij
