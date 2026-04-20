@@ -2,6 +2,15 @@
 # 通用别名
 # ============================================================================
 
+# batcat → bat (Ubuntu/Debian apt 包名为 batcat)
+# Ubuntu/Debian apt 包名与二进制名不一致的修正
+if command -v batcat >/dev/null 2>&1 && ! command -v bat >/dev/null 2>&1; then
+    alias bat='batcat'
+fi
+if command -v fdfind >/dev/null 2>&1 && ! command -v fd >/dev/null 2>&1; then
+    alias fd='fdfind'
+fi
+
 # ls → eza
 if command -v eza >/dev/null 2>&1; then
     alias ls='eza --icons'

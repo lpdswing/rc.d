@@ -79,13 +79,8 @@ function install_fnm() {
 
     if [[ $(uname) == 'Darwin' ]]; then
         brew install fnm
-    elif command -v cargo &>/dev/null; then
-        cargo install fnm
-    elif command -v curl &>/dev/null; then
-        curl -fsSL https://fnm.vercel.app/install | bash -s -- --skip-shell
     else
-        echo "请手动安装 fnm: https://github.com/Schniz/fnm"
-        return 1
+        curl -fsSL https://fnm.vercel.app/install | bash -s -- --skip-shell
     fi
 
     print_success "fnm 安装完成"
@@ -214,7 +209,7 @@ function install_jd() {
         esac
         mkdir -p "$HOME/.local/bin"
         curl -fsSL -o "$HOME/.local/bin/jd" \
-            "https://github.com/josephburnett/jd/releases/latest/download/jd-${os}-${arch}"
+            "https://github.com/josephburnett/jd/releases/latest/download/jd-${arch}-${os}"
         chmod +x "$HOME/.local/bin/jd"
     else
         echo "请手动安装 jd: https://github.com/josephburnett/jd"
