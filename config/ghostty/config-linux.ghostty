@@ -2,6 +2,8 @@
 # https://ghostty.org/docs/config
 
 # === 基础配置 ===
+# 防止linux窗口透明
+window-theme = ghostty
 font-family = "Maple Mono NF CN"
 background-opacity = 0.85
 bold-is-bright = true
