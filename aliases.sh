@@ -19,6 +19,8 @@ if command -v eza >/dev/null 2>&1; then
     alias la='eza -a --icons'
     alias lla='eza -lahF --icons'
     alias tree='eza --tree --icons'
+    # _eza 只补选项不补文件；alias 补全时会展开成 eza，所以直接改 eza 的补全
+    [[ -n "$ZSH_VERSION" ]] && (( $+functions[compdef] )) && compdef _files eza
 else
     alias l='ls -ClhoF'
     alias ll='ls -ClhF'
