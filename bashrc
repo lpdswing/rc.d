@@ -31,3 +31,5 @@ export HISTTIMEFORMAT="[%y-%m-%d_%T]  "
 # ============================================================================
 
 [[ -f ~/.fzf.bash ]] && source ~/.fzf.bash
+
+[[ "$TERM_PROGRAM" == "kiro" ]] && . "$(kiro --locate-shell-integration-path bash)"

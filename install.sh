@@ -219,6 +219,18 @@ function install_jd() {
     print_success "jd 安装完成"
 }
 
+# 检测 Linux 发行版
+function detect_distro() {
+    if [[ -f /etc/os-release ]]; then
+        . /etc/os-release
+        echo "$ID"
+    elif command -v lsb_release &>/dev/null; then
+        lsb_release -is | tr '[:upper:]' '[:lower:]'
+    else
+        echo "unknown"
+    fi
+}
+
 # 从 txt 文件批量安装包
 function install_packages() {
     print_info "安装常用软件包..."
@@ -227,7 +239,16 @@ function install_packages() {
     if [[ $(uname) == 'Darwin' ]]; then
         pkg_file="$RC_DIR/packages-brew.txt"
     else
-        pkg_file="$RC_DIR/packages-apt.txt"
+        local distro
+        distro=$(detect_distro)
+        case "$distro" in
+            fedora|rhel|centos|rocky|alma)
+                pkg_file="$RC_DIR/packages-dnf.txt"
+                ;;
+            *)
+                pkg_file="$RC_DIR/packages-apt.txt"
+                ;;
+        esac
     fi
 
     if [[ ! -f "$pkg_file" ]]; then
@@ -252,8 +273,18 @@ function install_packages() {
         print_info "使用 Homebrew 安装: ${packages[*]}"
         brew install "${packages[@]}"
     else
-        print_info "使用 apt 安装: ${packages[*]}"
-        sudo apt-get update && sudo apt-get install -y "${packages[@]}"
+        local distro
+        distro=$(detect_distro)
+        case "$distro" in
+            fedora|rhel|centos|rocky|alma)
+                print_info "使用 dnf 安装: ${packages[*]}"
+                sudo dnf install -y "${packages[@]}"
+                ;;
+            *)
+                print_info "使用 apt 安装: ${packages[*]}"
+                sudo apt-get update && sudo apt-get install -y "${packages[@]}"
+                ;;
+        esac
     fi
 
     print_success "软件包安装完成"
@@ -348,7 +379,7 @@ function install_all() {
 function show_menu() {
     cat << EOF
 
-RC.D 配置安装脚本
+RC.D 配置安装脚本 (支持 macOS / Ubuntu / Fedora)
 ================================
 【 1 】 一键安装（推荐）
 【 2 】 安装 Homebrew (macOS)

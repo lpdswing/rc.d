@@ -157,3 +157,5 @@ eval "$(uvx --generate-shell-completion zsh)"
 # OpenClaw Completion
 [[ -f "$HOME/.openclaw/completions/openclaw.zsh" ]] && source "$HOME/.openclaw/completions/openclaw.zsh"
 
+
+[[ "$TERM_PROGRAM" == "kiro" ]] && . "$(kiro --locate-shell-integration-path zsh)"

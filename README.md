@@ -8,6 +8,12 @@ My rc files and other configs.
 - curl
 - git
 
+## 支持平台
+
+- macOS (Homebrew)
+- Ubuntu / Debian (apt)
+- Fedora / RHEL / CentOS / Rocky / Alma (dnf)
+
 ## Install
 
 ```
