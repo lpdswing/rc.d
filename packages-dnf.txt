@@ -1,6 +1,18 @@
 # dnf packages (Fedora/RHEL)
 # 每行一个包名，# 开头为注释
 
+# 基础必备（新装系统可能缺失）
+git
+vim
+curl
+wget
+zsh
+unzip
+gcc
+make
+tree
+net-tools
+
 # 终端工具
 fzf
 fd-find

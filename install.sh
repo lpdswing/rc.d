@@ -24,6 +24,66 @@ function ensure_rc() {
     fi
 }
 
+# 引导安装基础依赖（git/curl/zsh，install_packages 之前调用）
+function bootstrap_essentials() {
+    local need_install=()
+    for cmd in git curl zsh; do
+        if ! command -v "$cmd" &>/dev/null; then
+            need_install+=("$cmd")
+        fi
+    done
+
+    if [[ ${#need_install[@]} -eq 0 ]]; then
+        return 0
+    fi
+
+    print_info "安装基础依赖: ${need_install[*]} ..."
+
+    if [[ $(uname) == 'Darwin' ]]; then
+        brew install "${need_install[@]}"
+    else
+        local distro
+        distro=$(detect_distro)
+        case "$distro" in
+            fedora|rhel|centos|rocky|alma)
+                sudo dnf install -y "${need_install[@]}"
+                ;;
+            *)
+                sudo apt-get update && sudo apt-get install -y "${need_install[@]}"
+                ;;
+        esac
+    fi
+
+    print_success "基础依赖安装完成"
+}
+
+# 将 zsh 设为默认 shell
+function set_default_shell_zsh() {
+    if [[ "$SHELL" == *"zsh"* ]]; then
+        print_success "默认 shell 已是 zsh"
+        return 0
+    fi
+
+    if ! command -v zsh &>/dev/null; then
+        echo "zsh 未安装，跳过设置默认 shell"
+        return 1
+    fi
+
+    local zsh_path
+    zsh_path=$(command -v zsh)
+
+    # 确保 zsh 在 /etc/shells 中
+    if ! grep -qx "$zsh_path" /etc/shells 2>/dev/null; then
+        print_info "将 $zsh_path 添加到 /etc/shells ..."
+        echo "$zsh_path" | sudo tee -a /etc/shells >/dev/null
+    fi
+
+    print_info "将默认 shell 切换为 zsh ..."
+    chsh -s "$zsh_path"
+
+    print_success "默认 shell 已切换为 zsh（重新登录后生效）"
+}
+
 # 安装 Homebrew (仅 macOS)
 function install_brew() {
     print_info "安装 Homebrew..."
@@ -355,6 +415,8 @@ function install_all() {
 
     if [[ $(uname) == 'Darwin' ]]; then
         install_brew
+    else
+        bootstrap_essentials
     fi
 
     install_packages
@@ -366,6 +428,7 @@ function install_all() {
     install_zellij
     install_jd
     setup_env
+    set_default_shell_zsh
 
     print_success "安装完成！"
     echo ""
@@ -393,6 +456,8 @@ RC.D 配置安装脚本 (支持 macOS / Ubuntu / Fedora)
 【 a 】 安装 zoxide
 【 b 】 安装 zellij
 【 c 】 安装 jd
+【 d 】 安装基础依赖 (git/curl/zsh)
+【 e 】 设置 zsh 为默认 shell
 【 0 】 退出
 ================================
 EOF
@@ -419,5 +484,8 @@ case $choice in
     a|A) install_zoxide;;
     b|B) install_zellij;;
     c|C) install_jd;;
+    d|D) bootstrap_essentials;;
+    e|E) set_default_shell_zsh;;
     0|*) echo "退出" && exit;;
 esac
+
