@@ -18,6 +18,6 @@ fd-find
 bat
 ripgrep
 eza
-htop
+btop
 jq
 tmux
