@@ -13,12 +13,12 @@ fi
 
 # ls → eza
 if command -v eza >/dev/null 2>&1; then
-    alias ls='eza --icons'
-    alias l='eza -lhF --icons'
-    alias ll='eza -lhF --icons'
-    alias la='eza -a --icons'
-    alias lla='eza -lahF --icons'
-    alias tree='eza --tree --icons'
+    alias ls='eza --icons=auto'
+    alias l='eza -lhF --icons=auto'
+    alias ll='eza -lhF --icons=auto'
+    alias la='eza -a --icons=auto'
+    alias lla='eza -lahF --icons=auto'
+    alias tree='eza --tree --icons=auto'
     # _eza 只补选项不补文件；alias 补全时会展开成 eza，所以直接改 eza 的补全
     [[ -n "$ZSH_VERSION" ]] && (( $+functions[compdef] )) && compdef _files eza
 else
